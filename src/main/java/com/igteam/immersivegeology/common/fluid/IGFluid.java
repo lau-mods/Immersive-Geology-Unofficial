@@ -282,6 +282,13 @@ public abstract class IGFluid extends FlowingFluid implements IGBlockType
 	}
 
 	public static class Flowing extends IGFluid {
+		@Override
+		public @NotNull FluidType getFluidType()
+		{
+			// Client extensions belong to the registered source type, shared by both variants.
+			return getSource().getFluidType();
+		}
+
 		public Flowing(MaterialInterface<?> material, @Nullable MaterialInterface<?> extra, BlockCategoryFlags flag, ItemCategoryFlags bucket_type) {
 			super(flag, bucket_type, material, extra);
 
