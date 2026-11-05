@@ -18,11 +18,13 @@ classes
 # gradle
 build
 .gradle
+.tmp/
 
 # other
 eclipse
 run
 libs
+.vscode
 
 # custom
 logs
