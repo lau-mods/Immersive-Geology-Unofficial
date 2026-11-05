@@ -596,6 +596,17 @@ public class IGMetalDetectorEntity extends IEBaseBlockEntity implements IEServer
 		}
 	}
 
+    @Override
+    protected void collectImplicitComponents(net.minecraft.core.component.DataComponentMap.Builder components)
+    {
+        super.collectImplicitComponents(components);
+        CompoundTag data = new CompoundTag();
+        data.putString("id", "immersivegeology:metal_detector_type");
+        data.putInt("energy", energyStorage.getEnergyStored());
+        components.set(net.minecraft.core.component.DataComponents.BLOCK_ENTITY_DATA,
+                net.minecraft.world.item.component.CustomData.of(data));
+    }
+
 	@Override
 	public void writeCustomNBT(CompoundTag tag, boolean descPacket, net.minecraft.core.HolderLookup.Provider provider)
 	{

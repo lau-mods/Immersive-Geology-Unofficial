@@ -109,7 +109,7 @@ public class IGItemModelProvider extends IGTRSRItemModelProvider
             withExistingParent(itemLocation, parentLocation).texture("layer0", colored ? coloredTexture : texture);
         } catch (Exception ex) {
             ResourceLocation parentLocation = ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "item/base/ig_base_item");
-            withExistingParent(itemLocation, parentLocation).textures.put("layer0", texture.toString());
+            withExistingParent(itemLocation, parentLocation).texture("layer0", texture.toString());
         }
     }
 
@@ -138,10 +138,10 @@ public class IGItemModelProvider extends IGTRSRItemModelProvider
             }
         } catch (Exception ex) {
             ResourceLocation parentLocation = ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "item/base/ig_base_item");
-            withExistingParent(itemLocation, parentLocation).textures.put("layer0", item.getMaterial(MaterialTexture.base).getTextureLocation(item.getFlag()).toString());
+            withExistingParent(itemLocation, parentLocation).texture("layer0", item.getMaterial(MaterialTexture.base).getTextureLocation(item.getFlag()).toString());
 
             if(item.getMaterial(MaterialTexture.overlay) != null) {
-                getBuilder(itemLocation).textures.put("layer1", item.getMaterial(MaterialTexture.overlay).getTextureLocation(item.getFlag()).toString());
+                getBuilder(itemLocation).texture("layer1", item.getMaterial(MaterialTexture.overlay).getTextureLocation(item.getFlag()).toString());
             }
         }
     }
@@ -164,10 +164,10 @@ public class IGItemModelProvider extends IGTRSRItemModelProvider
             }
         } catch (Exception ex) {
             ResourceLocation parentLocation = ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "item/base/ig_tool_item");
-            withExistingParent(itemLocation, parentLocation).textures.put("layer0", item.getMaterial(MaterialTexture.base).getTextureLocation(item.getFlag()).toString());
+            withExistingParent(itemLocation, parentLocation).texture("layer0", item.getMaterial(MaterialTexture.base).getTextureLocation(item.getFlag()).toString());
 
             if(item.getMaterial(MaterialTexture.overlay) != null) {
-                getBuilder(itemLocation).textures.put("layer1", item.getMaterial(MaterialTexture.overlay).getTextureLocation(item.getFlag()).toString());
+                getBuilder(itemLocation).texture("layer1", item.getMaterial(MaterialTexture.overlay).getTextureLocation(item.getFlag()).toString());
             }
         }
     }
@@ -188,10 +188,10 @@ public class IGItemModelProvider extends IGTRSRItemModelProvider
             }
         } catch (Exception ex) {
             ResourceLocation parentLocation = ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "item/base/ig_base_item");
-            withExistingParent(itemLocation, parentLocation).textures.put("layer0", useTextureBase.toString());
+            withExistingParent(itemLocation, parentLocation).texture("layer0", useTextureBase.toString());
 
             if(item.getMaterial(MaterialTexture.overlay) != null) {
-                getBuilder(itemLocation).textures.put("layer1", item.getMaterial(MaterialTexture.overlay).getTextureLocation(item.getFlag()).toString());
+                getBuilder(itemLocation).texture("layer1", item.getMaterial(MaterialTexture.overlay).getTextureLocation(item.getFlag()).toString());
             }
         }
     }

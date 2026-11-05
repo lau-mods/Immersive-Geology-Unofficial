@@ -24,7 +24,7 @@ public class ChemicalRecipeBuilder extends IGRecipeBuilder<ChemicalRecipeBuilder
 
 	public static ChemicalRecipeBuilder builder(IngredientWithSize result, FluidStack fluidStack, IngredientWithSize itemInput, SizedFluidIngredient fluidInputA, SizedFluidIngredient fluidInputB, SizedFluidIngredient fluidInputC)
 	{
-		ChemicalRecipeBuilder builder = new ChemicalRecipeBuilder().addResult(result).addFluid("fluidResult", fluidStack).addFluid("fluidResult", fluidStack)
+		ChemicalRecipeBuilder builder = new ChemicalRecipeBuilder().addResult(result).addFluid("fluidResult", fluidStack)
 				.addIngredient("itemInput",itemInput);
 
 		if(fluidInputA != null)
@@ -44,15 +44,11 @@ public class ChemicalRecipeBuilder extends IGRecipeBuilder<ChemicalRecipeBuilder
 
 	public static ChemicalRecipeBuilder builder(ItemStack result, FluidStack fluidStack, IngredientWithSize itemInput, SizedFluidIngredient fluidInputA, SizedFluidIngredient fluidInputB, SizedFluidIngredient fluidInputC)
 	{
-		ChemicalRecipeBuilder builder = new ChemicalRecipeBuilder().addFluid("fluidResult", fluidStack).addFluid("fluidResult", fluidStack)
+		ChemicalRecipeBuilder builder = new ChemicalRecipeBuilder().addFluid("fluidResult", fluidStack)
 				.addIngredient("itemInput",itemInput);
 		if(!result.isEmpty())
 		{
 			builder.addResult(result);
-		}
-		else
-		{
-			builder.addResult(IngredientWithSize.of(ItemStack.EMPTY));
 		}
 		if(fluidInputA != null)
 		{

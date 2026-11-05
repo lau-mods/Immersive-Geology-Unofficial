@@ -21,12 +21,9 @@ import com.igteam.immersivegeology.core.registration.IGRegistrationHolder;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.EventBusSubscriber.Bus;
 
 import java.util.*;
 
-@EventBusSubscriber(modid = IGLib.MODID, bus = Bus.MOD)
 public class IGServerConfig
 {
 	public static final ModConfigSpec CONFIG_SPEC;
@@ -90,7 +87,7 @@ public class IGServerConfig
 			logProcess = builder.comment("Enable logging of the ore removal process for debugging or performance analysis.").define("log_process", false);
 
 			builder.comment("Specify biomes where ore removal should be disabled. Useful for preserving ore generation in specific areas without disabling the system entirely.");
-			this.biome_blacklist = builder.comment("List of biome tags (e.g., 'minecraft:is_overworld', 'forge:is_sandy', 'forge:is_dry/overworld', 'minecraft:spawns_warm_variant_frogs', or 'minecraft:has_structure/mineshaft_mesa') where ore removal will be skipped. Applies to all ore types defined above.").defineListAllowEmpty("biome_blacklist",
+			this.biome_blacklist = builder.comment("List of biome tags (e.g., 'minecraft:is_overworld', 'c:is_sandy', 'c:is_dry/overworld', 'minecraft:spawns_warm_variant_frogs', or 'minecraft:has_structure/mineshaft_mesa') where ore removal will be skipped. Applies to all ore types defined above.").defineListAllowEmpty("biome_blacklist",
 					List.of(),
 					obj -> obj instanceof String && (ResourceLocation.tryParse((String) obj)!=null)
 			);

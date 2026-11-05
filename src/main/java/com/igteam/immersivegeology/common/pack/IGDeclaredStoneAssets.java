@@ -113,7 +113,7 @@ public final class IGDeclaredStoneAssets
 
 		for(Map.Entry<ResourceLocation, Set<String>> tag : blockTags.entrySet())
 		{
-			assets.server.put(dataPath(tag.getKey(), "tags/blocks"), tagJson(tag.getValue()));
+			assets.server.put(dataPath(tag.getKey(), "tags/block"), tagJson(tag.getValue()));
 		}
 
 		for(String stone : stoneNames) lang.put("material."+IGLib.MODID+"."+stone, titleCase(stone));
@@ -275,12 +275,14 @@ public final class IGDeclaredStoneAssets
 		JsonObject predicate = new JsonObject();
 		JsonArray enchantments = new JsonArray();
 		JsonObject silk = new JsonObject();
-		silk.addProperty("enchantment", "minecraft:silk_touch");
+		silk.addProperty("enchantments", "minecraft:silk_touch");
 		JsonObject levels = new JsonObject();
 		levels.addProperty("min", 1);
 		silk.add("levels", levels);
 		enchantments.add(silk);
-		predicate.add("enchantments", enchantments);
+		JsonObject predicates = new JsonObject();
+		predicates.add("minecraft:enchantments", enchantments);
+		predicate.add("predicates", predicates);
 		match.add("predicate", predicate);
 		conditions.add(match);
 		silkTouched.add("conditions", conditions);
@@ -323,7 +325,7 @@ public final class IGDeclaredStoneAssets
 		root.add("pools", pools);
 		root.addProperty("random_sequence", IGLib.MODID+":blocks/"+blockId.getPath());
 
-		assets.server.put(ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "loot_tables/blocks/"+blockId.getPath()+".json"), bytes(root));
+		assets.server.put(ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "loot_table/blocks/"+blockId.getPath()+".json"), bytes(root));
 	}
 
 	private static JsonObject itemEntry(String item)
@@ -339,7 +341,7 @@ public final class IGDeclaredStoneAssets
 		String id = blockId.toString();
 		add(tags, ore.getOreMaterial().getBlockMaterialTag().location(), id);
 		add(tags, BlockCategoryFlags.ORE_BLOCK.getCategoryTag().location(), id);
-		add(tags, ResourceLocation.fromNamespaceAndPath("forge", "ores"), id);
+		add(tags, ResourceLocation.fromNamespaceAndPath("c", "ores"), id);
 		add(tags, ResourceLocation.fromNamespaceAndPath("minecraft", "mineable/pickaxe"), id);
 		add(tags, ResourceLocation.fromNamespaceAndPath("minecraft", "needs_stone_tool"), id);
 	}

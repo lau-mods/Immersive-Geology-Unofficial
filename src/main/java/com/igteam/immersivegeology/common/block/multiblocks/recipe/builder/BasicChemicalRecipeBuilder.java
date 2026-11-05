@@ -24,16 +24,12 @@ public class BasicChemicalRecipeBuilder extends IGRecipeBuilder<BasicChemicalRec
 
 	public static BasicChemicalRecipeBuilder builder(ItemStack result, FluidStack fluidStack, IngredientWithSize itemInput, SizedFluidIngredient fluidInputA, SizedFluidIngredient fluidInputB, int damage_per_second)
 	{
-		BasicChemicalRecipeBuilder builder = new BasicChemicalRecipeBuilder().addFluid("fluidResult", fluidStack).addFluid("fluidResult", fluidStack)
+		BasicChemicalRecipeBuilder builder = new BasicChemicalRecipeBuilder().addFluid("fluidResult", fluidStack)
 				.addIngredient("itemInput",itemInput);
 
 		if(!result.isEmpty())
 		{
 			builder.addResult(result);
-		}
-		else
-		{
-			builder.addResult(IngredientWithSize.of(ItemStack.EMPTY));
 		}
 		if(fluidInputA != null)
 		{
@@ -53,7 +49,7 @@ public class BasicChemicalRecipeBuilder extends IGRecipeBuilder<BasicChemicalRec
 
 	public static BasicChemicalRecipeBuilder builder(IngredientWithSize result, FluidStack fluidStack, IngredientWithSize itemInput, SizedFluidIngredient fluidInputA, SizedFluidIngredient fluidInputB, int damage_per_second)
 	{
-		BasicChemicalRecipeBuilder builder = new BasicChemicalRecipeBuilder().addFluid("fluidResult", fluidStack).addFluid("fluidResult", fluidStack)
+		BasicChemicalRecipeBuilder builder = new BasicChemicalRecipeBuilder().addFluid("fluidResult", fluidStack)
 				.addIngredient("itemInput",itemInput);
 
 		builder.addResult(result);
@@ -76,16 +72,12 @@ public class BasicChemicalRecipeBuilder extends IGRecipeBuilder<BasicChemicalRec
 
 	public static BasicChemicalRecipeBuilder builder(ItemStack result, FluidStack fluidStack, IngredientWithSize itemInput, SizedFluidIngredient fluidInputA, SizedFluidIngredient fluidInputB)
 	{
-		BasicChemicalRecipeBuilder builder = new BasicChemicalRecipeBuilder().addFluid("fluidResult", fluidStack).addFluid("fluidResult", fluidStack)
+		BasicChemicalRecipeBuilder builder = new BasicChemicalRecipeBuilder().addFluid("fluidResult", fluidStack)
 				.addIngredient("itemInput",itemInput);
 
 		if(!result.isEmpty())
 		{
 			builder.addResult(result);
-		}
-		else
-		{
-			builder.addResult(IngredientWithSize.of(ItemStack.EMPTY));
 		}
 		if(fluidInputA != null)
 		{

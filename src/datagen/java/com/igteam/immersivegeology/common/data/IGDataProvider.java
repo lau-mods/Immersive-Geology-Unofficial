@@ -37,17 +37,17 @@ public class IGDataProvider {
         generator.addProvider(event.includeClient(), new IGAtlasProvider(out));
 
         IGBlockStateProvider blockStateProvider = new IGBlockStateProvider(generator, helper);
-        generator.addProvider(runServer, blockStateProvider);
-        generator.addProvider(runServer, new IGItemModelProvider(generator, helper));
-        generator.addProvider(runServer, new IGComplexItemModelProvider(out, helper));
+        generator.addProvider(event.includeClient(), blockStateProvider);
+        generator.addProvider(event.includeClient(), new IGItemModelProvider(generator, helper));
+        generator.addProvider(event.includeClient(), new IGComplexItemModelProvider(out, helper));
         BlockTagsProvider blockTags = new IGBlockTags(out, lookup, helper);
         generator.addProvider(runServer, blockTags);
         generator.addProvider(runServer, new IGFluidTags(out, lookup, helper));
         generator.addProvider(runServer, new IGItemTags(out, lookup, blockTags.contentsGetter(), helper));
-        generator.addProvider(runServer, new IGDynamicModelProvider(blockStateProvider, out, helper));
-        generator.addProvider(runServer, new IGLootProvider(out));
-        generator.addProvider(runServer, new IGLootModifierProvider(out));
-        generator.addProvider(runServer, new IGRecipes(out));
+        generator.addProvider(event.includeClient(), new IGDynamicModelProvider(blockStateProvider, out, helper));
+        generator.addProvider(runServer, new IGLootProvider(out, lookup));
+        generator.addProvider(runServer, new IGLootModifierProvider(out, lookup));
+        generator.addProvider(runServer, new IGRecipes(out, lookup));
 
 
 

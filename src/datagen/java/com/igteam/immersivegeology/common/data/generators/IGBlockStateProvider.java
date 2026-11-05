@@ -332,23 +332,23 @@ public class IGBlockStateProvider extends BlockStateProvider {
         }
         catch(Exception e)
         {
-            baseModel.textures.put("particle", rTextureLocBase.toString());
-            topModel.textures.put("particle", rTextureLocBase.toString());
-            doubleModel.textures.put("particle", rTextureLocBase.toString());
+            baseModel.texture("particle", rTextureLocBase.toString());
+            topModel.texture("particle", rTextureLocBase.toString());
+            doubleModel.texture("particle", rTextureLocBase.toString());
 
-            doubleModel.textures.put("all", rTextureLocBase.toString());
-            topModel.textures.put("all", rTextureLocBase.toString());
-            baseModel.textures.put("all", rTextureLocBase.toString());
+            doubleModel.texture("all", rTextureLocBase.toString());
+            topModel.texture("all", rTextureLocBase.toString());
+            baseModel.texture("all", rTextureLocBase.toString());
 
 
-            doubleModel.textures.put("side", rTextureLocSide.toString());
-            doubleModel.textures.put("cover", rTextureLocBase.toString());
+            doubleModel.texture("side", rTextureLocSide.toString());
+            doubleModel.texture("cover", rTextureLocBase.toString());
 
-            topModel.textures.put("side", rTextureLocSide.toString());
-            topModel.textures.put("cover", rTextureLocBase.toString());
+            topModel.texture("side", rTextureLocSide.toString());
+            topModel.texture("cover", rTextureLocBase.toString());
 
-            baseModel.textures.put("side", rTextureLocSide.toString());
-            baseModel.textures.put("cover", rTextureLocBase.toString());
+            baseModel.texture("side", rTextureLocSide.toString());
+            baseModel.texture("cover", rTextureLocBase.toString());
         }
 
         builder.forAllStates(blockState ->
@@ -481,9 +481,9 @@ public class IGBlockStateProvider extends BlockStateProvider {
         boolean exists = existingFileHelper.exists(ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "textures/" + texture.getPath() + ".png"), CLIENT_RESOURCES);
         if(!exists)
         {
-            builder.textures.put("side", "immersivegeology:block/greyscale/scaffolding/scaffolding_pristine_"+block.getMaterial(MaterialTexture.base).getName().toLowerCase(Locale.ROOT));
-            builder.textures.put("top", scaffolding_type.equals(MetalScaffoldingType.STANDARD)?top_texture_standard: top_texture);
-            builder.textures.put("bottom", "immersivegeology:block/greyscale/scaffolding/scaffolding_pristine_"+block.getMaterial(MaterialTexture.base).getName().toLowerCase(Locale.ROOT));
+            builder.texture("side", "immersivegeology:block/greyscale/scaffolding/scaffolding_pristine_"+block.getMaterial(MaterialTexture.base).getName().toLowerCase(Locale.ROOT));
+            builder.texture("top", scaffolding_type.equals(MetalScaffoldingType.STANDARD)?top_texture_standard: top_texture);
+            builder.texture("bottom", "immersivegeology:block/greyscale/scaffolding/scaffolding_pristine_"+block.getMaterial(MaterialTexture.base).getName().toLowerCase(Locale.ROOT));
         } else {
             builder.texture("side", ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "block/colored/" + base_material.getName().toLowerCase(Locale.ROOT) + "/scaffolding/scaffolding"));
             builder.texture("top", texture);
@@ -508,8 +508,8 @@ public class IGBlockStateProvider extends BlockStateProvider {
                     .texture("particle", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()));
         } catch(Exception ignored)
         {
-            builder.textures.put("all", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString());
-            builder.textures.put("particle", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString());
+            builder.texture("all", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString());
+            builder.texture("particle", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString());
         }
 
         getVariantBuilder((Block)block).forAllStates(state -> ConfiguredModel.builder().modelFile(builder).build());
@@ -701,16 +701,16 @@ public class IGBlockStateProvider extends BlockStateProvider {
         } catch(Exception error) {
             if(formation.equals(StoneFormation.SEDIMENTARY) || block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()))
             {
-                baseModel.textures.put("side", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString() + (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_side" : ""));
+                baseModel.texture("side", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString() + (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_side" : ""));
 
-                    baseModel.textures.put("top", ResourceLocation.fromNamespaceAndPath(block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getNamespace(), block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getPath().toLowerCase(Locale.ROOT))+ (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_top" : ""));
+                    baseModel.texture("top", ResourceLocation.fromNamespaceAndPath(block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getNamespace(), block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getPath().toLowerCase(Locale.ROOT))+ (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_top" : ""));
                 
             } else {
-                baseModel.textures.put("base", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString());
+                baseModel.texture("base", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString());
             }
         }
-        if(usesStoneBackdrop(block, formation)) baseModel.textures.put("stone_backdrop", stoneBackdropTexture(block, variant).toString());
-        baseModel.textures.put("ore", default_richness_ore.toString());
+        if(usesStoneBackdrop(block, formation)) baseModel.texture("stone_backdrop", stoneBackdropTexture(block, variant).toString());
+        baseModel.texture("ore", default_richness_ore.toString());
     }
 
     private void implementOreCustomTexture(BlockModelBuilder baseModel, IGOreBlock block, StoneFormation formation, int variant)
@@ -731,15 +731,15 @@ public class IGBlockStateProvider extends BlockStateProvider {
         } catch(Exception error) {
             if(formation.equals(StoneFormation.SEDIMENTARY) || block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()))
             {
-                baseModel.textures.put("side", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString() + (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_side" : ""));
+                baseModel.texture("side", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString() + (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_side" : ""));
 
-                    baseModel.textures.put("top", ResourceLocation.fromNamespaceAndPath(block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getNamespace(), block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getPath().toLowerCase(Locale.ROOT))+ (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_top" : ""));
+                    baseModel.texture("top", ResourceLocation.fromNamespaceAndPath(block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getNamespace(), block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getPath().toLowerCase(Locale.ROOT))+ (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_top" : ""));
                 
             } else {
-                baseModel.textures.put("base", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString());
+                baseModel.texture("base", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString());
             }
         }
-        baseModel.textures.put("ore", default_richness_ore.toString());
+        baseModel.texture("ore", default_richness_ore.toString());
     }
 
     private void implementUnsafeOreTexture(BlockModelBuilder baseModel, IGOreBlock block, StoneFormation formation, int variant)
@@ -773,17 +773,17 @@ public class IGBlockStateProvider extends BlockStateProvider {
         } catch(Exception error) {
             if(formation.equals(StoneFormation.SEDIMENTARY) || block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()))
             {
-                baseModel.textures.put("side", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString() + (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_side" : ""));
+                baseModel.texture("side", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString() + (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_side" : ""));
 
-                    baseModel.textures.put("top", ResourceLocation.fromNamespaceAndPath(block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getNamespace(), block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getPath().toLowerCase(Locale.ROOT))+ (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_top" : ""));
+                    baseModel.texture("top", ResourceLocation.fromNamespaceAndPath(block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getNamespace(), block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getPath().toLowerCase(Locale.ROOT))+ (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_top" : ""));
                 
             } else {
-                baseModel.textures.put("base", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString());
+                baseModel.texture("base", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString());
             }
         }
 
-        if(usesStoneBackdrop(block, formation)) baseModel.textures.put("stone_backdrop", stoneBackdropTexture(block, variant).toString());
-        baseModel.textures.put("ore", default_richness_ore.toString());
+        if(usesStoneBackdrop(block, formation)) baseModel.texture("stone_backdrop", stoneBackdropTexture(block, variant).toString());
+        baseModel.texture("ore", default_richness_ore.toString());
     }
 
     public static void implementUnsafeOreTexture(ModelBuilder<?> baseModel, IGWeatheringOreBlock block, StoneFormation formation, int variant, MineralWeathering weathering, Direction direction)
@@ -804,17 +804,17 @@ public class IGBlockStateProvider extends BlockStateProvider {
         } catch(Exception error) {
             if(formation.equals(StoneFormation.SEDIMENTARY) || block.getMaterial(MaterialTexture.base).instance() instanceof MaterialMCBasalt)
             {
-                baseModel.textures.put("side", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString() + (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_side" : ""));
+                baseModel.texture("side", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString() + (block.getMaterial(MaterialTexture.base).useSedimentaryTextures(block.getFlag()) ? "_side" : ""));
 
-                    baseModel.textures.put("top", ResourceLocation.fromNamespaceAndPath(block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getNamespace(), block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getPath().toLowerCase(Locale.ROOT)).toString());
+                    baseModel.texture("top", ResourceLocation.fromNamespaceAndPath(block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getNamespace(), block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).getPath().toLowerCase(Locale.ROOT)).toString());
                 
             } else {
-                baseModel.textures.put("base", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString());
+                baseModel.texture("base", block.getMaterial(MaterialTexture.base).getTextureLocation(block.getFlag()).toString());
             }
         }
 
-        if(usesStoneBackdrop(block, formation)) baseModel.textures.put("stone_backdrop_" + direction.getName().toLowerCase(Locale.ROOT), stoneBackdropTexture(block, variant).toString());
-        baseModel.textures.put("ore_" + direction.getName().toLowerCase(Locale.ROOT), default_richness_ore.toString());
+        if(usesStoneBackdrop(block, formation)) baseModel.texture("stone_backdrop_" + direction.getName().toLowerCase(Locale.ROOT), stoneBackdropTexture(block, variant).toString());
+        baseModel.texture("ore_" + direction.getName().toLowerCase(Locale.ROOT), default_richness_ore.toString());
     }
 
     private void registerFluidBlock(Fluid fluid)
@@ -858,9 +858,9 @@ public class IGBlockStateProvider extends BlockStateProvider {
             outerModel.texture("all", stairsBlock.getMaterial(MaterialTexture.base).getTextureLocation(parentFlag));
         } catch(Exception e)
         {
-            baseModel.textures.put("all", stairsBlock.getMaterial(MaterialTexture.base).getTextureLocation(parentFlag).toString());
-            innerModel.textures.put("all", stairsBlock.getMaterial(MaterialTexture.base).getTextureLocation(parentFlag).toString());
-            outerModel.textures.put("all", stairsBlock.getMaterial(MaterialTexture.base).getTextureLocation(parentFlag).toString());
+            baseModel.texture("all", stairsBlock.getMaterial(MaterialTexture.base).getTextureLocation(parentFlag).toString());
+            innerModel.texture("all", stairsBlock.getMaterial(MaterialTexture.base).getTextureLocation(parentFlag).toString());
+            outerModel.texture("all", stairsBlock.getMaterial(MaterialTexture.base).getTextureLocation(parentFlag).toString());
         }
 
         builder.forAllStates(blockState ->
@@ -967,7 +967,7 @@ public class IGBlockStateProvider extends BlockStateProvider {
         final ResourceLocation name = multiblock.getUniqueName();
         if(TemplateMultiblock.SYNCED_CLIENT_TEMPLATES.containsKey(name))
             return;
-        final String filePath = "structures/"+name.getPath()+".nbt";
+        final String filePath = "structure/"+name.getPath()+".nbt";
         int slash = filePath.indexOf('/');
         String prefix = filePath.substring(0, slash);
         ResourceLocation shortLoc = ResourceLocation.fromNamespaceAndPath(
@@ -979,7 +979,7 @@ public class IGBlockStateProvider extends BlockStateProvider {
             final Resource resource = existingFileHelper.getResource(shortLoc, PackType.SERVER_DATA, "", prefix);
             try(final InputStream input = resource.open())
             {
-                final CompoundTag nbt = NbtIo.readCompressed(input);
+                final CompoundTag nbt = NbtIo.readCompressed(input, net.minecraft.nbt.NbtAccounter.unlimitedHeap());
                 final StructureTemplate template = new StructureTemplate();
                 template.load(BuiltInRegistries.BLOCK.asLookup(), nbt);
                 TemplateMultiblock.SYNCED_CLIENT_TEMPLATES.put(name, template);

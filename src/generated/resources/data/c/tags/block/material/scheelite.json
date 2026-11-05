@@ -1,0 +1,19 @@
+{
+  "values": [
+    "immersivegeology:minecraft_poor_ore_block_scheelite_stone",
+    "immersivegeology:minecraft_normal_ore_block_scheelite_stone",
+    "immersivegeology:minecraft_rich_ore_block_scheelite_stone",
+    "immersivegeology:minecraft_poor_ore_block_scheelite_deepslate",
+    "immersivegeology:minecraft_normal_ore_block_scheelite_deepslate",
+    "immersivegeology:minecraft_rich_ore_block_scheelite_deepslate",
+    "immersivegeology:minecraft_poor_ore_block_scheelite_andesite",
+    "immersivegeology:minecraft_normal_ore_block_scheelite_andesite",
+    "immersivegeology:minecraft_rich_ore_block_scheelite_andesite",
+    "immersivegeology:minecraft_poor_ore_block_scheelite_diorite",
+    "immersivegeology:minecraft_normal_ore_block_scheelite_diorite",
+    "immersivegeology:minecraft_rich_ore_block_scheelite_diorite",
+    "immersivegeology:minecraft_poor_ore_block_scheelite_granite",
+    "immersivegeology:minecraft_normal_ore_block_scheelite_granite",
+    "immersivegeology:minecraft_rich_ore_block_scheelite_granite"
+  ]
+}

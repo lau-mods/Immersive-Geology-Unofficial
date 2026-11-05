@@ -183,7 +183,7 @@ public class IEArcSmeltingMethod extends IGRecipeMethod
 	{
 		try
 		{
-			consumer.accept(getLocation(), new ArcFurnaceRecipe(new TagOutputList(new TagOutput(output)), new TagOutput(slag), secondaries.stream().map(entry -> new StackWithChance(new TagOutput(entry.getFirst()), entry.getSecond())).toList(), time, energy, input, additives), null);
+			consumer.accept(getLocation(), new ArcFurnaceRecipe(new TagOutputList(new TagOutput(output)), slag.isEmpty() ? TagOutput.EMPTY : new TagOutput(slag), secondaries.stream().map(entry -> new StackWithChance(new TagOutput(entry.getFirst()), entry.getSecond())).toList(), time, energy, input, additives), null);
 			return true;
 		} catch(Exception e)
 		{

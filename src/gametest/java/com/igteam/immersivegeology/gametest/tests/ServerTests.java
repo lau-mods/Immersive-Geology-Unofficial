@@ -12,6 +12,13 @@ import com.igteam.immersivegeology.core.lib.IGLib;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.world.item.crafting.Recipe;
+import com.google.gson.JsonParser;
+import io.netty.buffer.Unpooled;
+import io.netty.buffer.ByteBufUtil;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
@@ -40,7 +47,45 @@ public class ServerTests
 				200, 0, true, ServerTests::testNetworkConnectivity
 		));
 
+		tests.add(new TestFunction("server", "recipes_load_and_sync", TEST_AREA,
+				200, 0, true, ServerTests::testRecipesLoadAndSync));
 		return tests;
+	}
+
+	private static void testRecipesLoadAndSync(GameTestHelper helper) {
+		var level = helper.getLevel();
+		var recipes = level.getRecipeManager();
+		var files = new FileToIdConverter("recipe", ".json");
+		for(var entry : files.listMatchingResources(level.getServer().getResourceManager()).entrySet()) {
+			if(!entry.getKey().getNamespace().equals(IGLib.MODID)) continue;
+			try(var reader = entry.getValue().openAsReader()) {
+				var json = JsonParser.parseReader(reader).getAsJsonObject();
+				if(!json.has("neoforge:conditions"))
+					helper.assertTrue(recipes.byKey(files.fileToId(entry.getKey())).isPresent(),
+							"Recipe failed to load: " + entry.getKey());
+			} catch(java.io.IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		int checked = 0;
+		for(var holder : recipes.getRecipes()) {
+			if(!BuiltInRegistries.RECIPE_SERIALIZER.getKey(holder.value().getSerializer()).getNamespace().equals(IGLib.MODID)) continue;
+			var encoded = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
+			var roundTrip = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
+			try {
+				Recipe.STREAM_CODEC.encode(encoded, holder.value());
+				var decoded = Recipe.STREAM_CODEC.decode(encoded);
+				Recipe.STREAM_CODEC.encode(roundTrip, decoded);
+				encoded.readerIndex(0);
+				helper.assertTrue(ByteBufUtil.equals(encoded, roundTrip), "Recipe sync changed: " + holder.id());
+				checked++;
+			} finally {
+				encoded.release();
+				roundTrip.release();
+			}
+		}
+		helper.assertTrue(checked > 0, "No Immersive Geology recipes loaded");
+		helper.succeed();
 	}
 
 	private static void testServerStartup(GameTestHelper helper) {

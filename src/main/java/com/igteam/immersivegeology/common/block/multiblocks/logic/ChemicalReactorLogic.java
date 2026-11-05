@@ -401,7 +401,7 @@ public class ChemicalReactorLogic implements IMultiblockLogic<ChemicalReactorLog
 				}
 			}
 
-			boolean item_pass = recipe.itemOutput.equals(ItemStack.EMPTY) || getInventory().insertItem(1, recipe.itemOutput, true) != ItemStack.EMPTY;
+			boolean item_pass = recipe.itemOutput.get().isEmpty() || getInventory().insertItem(1, recipe.itemOutput.get(), true) != ItemStack.EMPTY;
 
 			return fluid_pass && item_pass;
 		}

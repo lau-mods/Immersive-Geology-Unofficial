@@ -23,9 +23,9 @@ import java.util.List;
 public class IGLootModifierProvider extends GlobalLootModifierProvider
 {
 
-	public IGLootModifierProvider(PackOutput output)
+	public IGLootModifierProvider(PackOutput output, java.util.concurrent.CompletableFuture<net.minecraft.core.HolderLookup.Provider> lookup)
 	{
-		super(output, IGLib.MODID);
+		super(output, lookup, IGLib.MODID);
 	}
 
 	@Override

@@ -1,0 +1,20 @@
+{
+  "values": [
+    "immersivegeology:minecraft_poor_ore_block_pyrite_basalt",
+    "immersivegeology:minecraft_normal_ore_block_pyrite_basalt",
+    "immersivegeology:minecraft_rich_ore_block_pyrite_basalt",
+    "immersivegeology:minecraft_poor_ore_block_pyrite_netherrack",
+    "immersivegeology:minecraft_normal_ore_block_pyrite_netherrack",
+    "immersivegeology:minecraft_rich_ore_block_pyrite_netherrack",
+    "immersivegeology:powder_pyrite",
+    "immersivegeology:grit_pyrite",
+    "immersivegeology:slag_pyrite",
+    "immersivegeology:pellet_pyrite",
+    "immersivegeology:powdered_slag_pyrite",
+    "immersivegeology:poor_ore_pyrite",
+    "immersivegeology:normal_ore_pyrite",
+    "immersivegeology:rich_ore_pyrite",
+    "immersivegeology:crushed_ore_pyrite",
+    "immersivegeology:dirty_crushed_ore_pyrite"
+  ]
+}

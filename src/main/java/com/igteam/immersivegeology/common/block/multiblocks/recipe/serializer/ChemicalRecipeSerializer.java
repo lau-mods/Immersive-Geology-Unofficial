@@ -24,7 +24,7 @@ public class ChemicalRecipeSerializer extends IERecipeSerializer<ChemicalRecipe>
         IEDualCodecs.SIZED_FLUID_INGREDIENT.optionalFieldOf("fluidInputA"), r -> r.fluidIn.stream().skip(0).findFirst(),
         IEDualCodecs.SIZED_FLUID_INGREDIENT.optionalFieldOf("fluidInputB"), r -> r.fluidIn.stream().skip(1).findFirst(),
         IEDualCodecs.SIZED_FLUID_INGREDIENT.optionalFieldOf("fluidInputC"), r -> r.fluidIn.stream().skip(2).findFirst(),
-        TagOutput.CODECS.map(TagOutput::get, TagOutput::new).fieldOf("result"), r -> r.itemOutput,
+        TagOutput.CODECS.optionalFieldOf("result", TagOutput.EMPTY), r -> r.itemOutput,
         IEDualCodecs.FLUID_STACK.fieldOf("fluidResult"), r -> r.fluidOutput,
         DualCodecs.INT.fieldOf("energy"), r -> r.getTotalProcessEnergy(),
         DualCodecs.INT.fieldOf("time"), r -> r.getTotalProcessTime(),

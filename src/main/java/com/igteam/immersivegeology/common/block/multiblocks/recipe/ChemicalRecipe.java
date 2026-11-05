@@ -34,14 +34,14 @@ public class ChemicalRecipe extends MultiblockRecipe
 {
 	public static DeferredHolder<RecipeSerializer<?>, IERecipeSerializer<ChemicalRecipe>> SERIALIZER;
 	public static final CachedRecipeList<ChemicalRecipe> RECIPES = new CachedRecipeList<>(IGRecipeTypes.CHEMICAL_REACTOR);
-	public final ItemStack itemOutput;
+	public final TagOutput itemOutput;
 	public final FluidStack fluidOutput;
 	public final Set<SizedFluidIngredient> fluidIn;
 	public final IngredientWithSize itemInput;
 	Lazy<Integer> totalProcessEnergy;
 	Lazy<Integer> totalProcessTime;
 
-	public <T extends Recipe<?>> ChemicalRecipe(IngredientWithSize inputItem, Set<SizedFluidIngredient> fluidInputSet, ItemStack itemOutput, FluidStack fluidOutput, int energy, int time)
+	public <T extends Recipe<?>> ChemicalRecipe(IngredientWithSize inputItem, Set<SizedFluidIngredient> fluidInputSet, TagOutput itemOutput, FluidStack fluidOutput, int energy, int time)
 	{
 		super(TagOutput.EMPTY, IGRecipeTypes.CHEMICAL_REACTOR, 1, 0, () -> new RecipeMultiplier(() -> 1, () -> 1));
 		this.itemOutput = itemOutput;
@@ -50,7 +50,7 @@ public class ChemicalRecipe extends MultiblockRecipe
 		this.itemInput = inputItem;
 		totalProcessEnergy = Lazy.of(() -> energy);
 		totalProcessTime = Lazy.of(() -> time);
-		this.outputList = new TagOutputList(new TagOutput(this.itemOutput));
+		this.outputList = new TagOutputList(this.itemOutput);
 		this.fluidOutputList = List.of(fluidOutput);
 		this.fluidInputList = fluidIn.stream().toList();
 		this.setInputList(List.of(itemInput.getBaseIngredient()));
@@ -78,7 +78,7 @@ public class ChemicalRecipe extends MultiblockRecipe
 	public NonNullList<ItemStack> getActualItemOutputs()
 	{
 		NonNullList<ItemStack> list = NonNullList.create();
-		list.add(this.itemOutput);
+		list.add(this.itemOutput.get());
 		return list;
 	}
 

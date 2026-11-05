@@ -45,7 +45,8 @@ public class CommonTests
 	{
 		List<TestFunction> all = new ArrayList<>();
 		all.addAll(multiblockTests());
-		all.add(new TestFunction("ore_feature_testing", "mapping", TEST_AREA, 999999, 20, true, SpawnChunkCapture::captureSpawnChunks));
+		if(Boolean.getBoolean("immersivegeology.captureSpawnChunks"))
+			all.add(new TestFunction("ore_feature_testing", "mapping", TEST_AREA, 999999, 20, true, SpawnChunkCapture::captureSpawnChunks));
 		return all;
 	}
 
@@ -67,7 +68,7 @@ public class CommonTests
 
 	private static void formAndDisassemble(GameTestHelper helper, IGTemplateMultiblock multiblock)
 	{
-		Player player = helper.makeMockPlayer();
+		Player player = helper.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
 		BlockPos triggerRelative = multiblock.getTriggerOffset().above();
 		BlockPos triggerAbsolute = helper.absolutePos(triggerRelative);
 		BlockPos testRelative = Util.make(() -> {
@@ -102,7 +103,7 @@ public class CommonTests
 
 	public static void formMultiblock(IMultiblock multiblock, GameTestHelper helper)
 	{
-		Player player = helper.makeMockPlayer();
+		Player player = helper.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
 		ItemStack ie_hammer = new ItemStack(Tools.HAMMER);
 		List<ItemStack> hammerTypes = List.of(ie_hammer,
 				MetalEnum.Bronze.getStack(ItemCategoryFlags.HAMMER),

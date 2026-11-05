@@ -173,7 +173,7 @@ public class IGBlastingMethod extends IGRecipeMethod
 	public boolean build(RecipeOutput consumer)
 	{
 		try {
-			consumer.accept(getLocation(), new BlastFurnaceRecipe(new TagOutput(output), new IngredientWithSize(input), time, new TagOutput(slag)), null);
+			consumer.accept(getLocation(), new BlastFurnaceRecipe(new TagOutput(output), new IngredientWithSize(input), time, slag.isEmpty() ? TagOutput.EMPTY : new TagOutput(slag)), null);
 			return true;
 		}
 		catch(Exception e)

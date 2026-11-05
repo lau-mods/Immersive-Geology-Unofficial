@@ -94,7 +94,6 @@ public class RevFurnaceLogic implements IMultiblockLogic<RevFurnaceLogic.State>,
     @Override
     public void tickServer(IMultiblockContext<RevFurnaceLogic.State> context) {
         final State state = context.getState();
-        state.mirrored = context.getLevel().getOrientation().mirrored();
         final IMultiblockLevel level = context.getLevel();
         state.active_left = state.furnace.tickServerLeft(context);
         state.active_right = state.furnace.tickServerRight(context);
@@ -222,7 +221,6 @@ public class RevFurnaceLogic implements IMultiblockLogic<RevFurnaceLogic.State>,
     public void tickClient(IMultiblockContext<State> context)
     {
         final State state = context.getState();
-        state.mirrored = context.getLevel().getOrientation().mirrored();
         final boolean isMirrored = context.getLevel().getOrientation().mirrored();
         if(context.getLevel().shouldTickModulo(2))
         {
@@ -372,6 +370,12 @@ public class RevFurnaceLogic implements IMultiblockLogic<RevFurnaceLogic.State>,
         public void writeSyncNBT(CompoundTag nbt, HolderLookup.Provider provider)
         {
             writeSaveNBT(nbt, provider);
+        }
+
+        public void setMirrored(boolean mirrored)
+        {
+            // Set during formation, before neighbors can cache the left/right handlers.
+            this.mirrored = mirrored;
         }
 
         public boolean isActive(int furnaceIndex)

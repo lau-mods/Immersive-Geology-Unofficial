@@ -36,8 +36,8 @@ neoForge {
         data {
             data()
             sourceSet = sourceSets.datagen
-            programArguments.addAll '--mod', 'immersivegeology', '--all',
-                    '--output', file('src/generated/resources').absolutePath,
+            programArguments.addAll '--mod', 'immersivegeology', '--server',
+                    '--output', file('build/generated').absolutePath,
                     '--existing', file('src/main/resources').absolutePath
         }
         gameTestServer {
@@ -52,6 +52,10 @@ neoForge {
             sourceSet sourceSets.datagen
             sourceSet sourceSets.gametest
         }
+    }
+    unitTest {
+        enable()
+        testedMod = mods.immersivegeology
     }
 }
 
@@ -70,10 +74,13 @@ dependencies {
     datagenImplementation "blusunrize.immersiveengineering:ImmersiveEngineering:${version_ie}:datagen"
     compileOnly "mezz.jei:jei-1.21.1-common-api:${version_jei}"
     compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${version_jei}"
-    runtimeOnly "mezz.jei:jei-1.21.1-neoforge:${version_jei}"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.8.1'
+    if (!providers.gradleProperty("withoutJei").isPresent()) {
+        runtimeOnly "mezz.jei:jei-1.21.1-neoforge:${version_jei}"
+    }
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.withType(ProcessResources).configureEach {
@@ -87,7 +94,6 @@ tasks.withType(ProcessResources).configureEach {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.compilerArgs += ['-Xmaxerrs', '1000']
 }
 
 tasks.withType(Jar).configureEach { zip64 = true }
