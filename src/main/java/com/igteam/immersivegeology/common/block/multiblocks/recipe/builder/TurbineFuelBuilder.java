@@ -8,15 +8,12 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.IERecipeSerializer;
-import blusunrize.immersiveengineering.api.crafting.builders.GeneratorFuelBuilder;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
-import blusunrize.immersiveengineering.api.energy.GeneratorFuel;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.TurbineFuel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 
-public class TurbineFuelBuilder  extends IEFinishedRecipe<TurbineFuelBuilder>
+public class TurbineFuelBuilder  extends IGRecipeBuilder<TurbineFuelBuilder>
 {
 	public static final String FLUID_TAG_KEY = "fluidTag";
 	public static final String BURN_TIME_KEY = "burnTime";

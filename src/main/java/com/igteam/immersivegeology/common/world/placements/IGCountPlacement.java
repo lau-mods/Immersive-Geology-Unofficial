@@ -11,7 +11,6 @@ package com.igteam.immersivegeology.common.world.placements;
 import com.igteam.immersivegeology.common.config.IGServerConfig;
 import com.igteam.immersivegeology.common.world.IGWorldGen;
 import com.igteam.immersivegeology.common.world.IWorldGenConfig;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
@@ -24,7 +23,7 @@ import java.util.stream.Stream;
 
 public class IGCountPlacement extends RepeatingPlacement
 {
-	public static final Codec<IGCountPlacement> CODEC;
+	public static final com.mojang.serialization.MapCodec<IGCountPlacement> CODEC;
 	private final IWorldGenConfig type;
 
 	public IGCountPlacement(IWorldGenConfig type) {
@@ -51,7 +50,7 @@ public class IGCountPlacement extends RepeatingPlacement
 	}
 
 	static {
-		CODEC = IWorldGenConfig.CODEC.xmap(IGCountPlacement::new, (p) -> {
+		CODEC = IWorldGenConfig.CODEC.fieldOf("value").xmap(IGCountPlacement::new, (p) -> {
 			return p.type;
 		});
 	}

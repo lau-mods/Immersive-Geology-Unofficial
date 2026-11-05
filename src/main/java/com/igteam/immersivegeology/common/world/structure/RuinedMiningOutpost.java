@@ -13,7 +13,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -25,14 +24,14 @@ import java.util.Optional;
 
 public class RuinedMiningOutpost extends Structure
 {
-	public static final Codec<RuinedMiningOutpost> CODEC = RecordCodecBuilder.<RuinedMiningOutpost>mapCodec(instance ->
+	public static final com.mojang.serialization.MapCodec<RuinedMiningOutpost> CODEC = RecordCodecBuilder.<RuinedMiningOutpost>mapCodec(instance ->
 			instance.group(
 					RuinedMiningOutpost.settingsCodec(instance),
 					StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
 					Codec.intRange(0, 30).fieldOf("size").forGetter(structure -> structure.size),
 					Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter)
 			).apply(instance, RuinedMiningOutpost::new)
-	).codec();
+	);
 
 	private final Holder<StructureTemplatePool> startPool;
 	private final int size;
@@ -73,7 +72,10 @@ public class RuinedMiningOutpost extends Structure
 				structurePos,
 				false, // useExpansionHack
 				Optional.empty(), // No heightmap projection needed
-				this.maxDistanceFromCenter
+				this.maxDistanceFromCenter,
+                net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup.EMPTY,
+                net.minecraft.world.level.levelgen.structure.pools.DimensionPadding.ZERO,
+                net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings.APPLY_WATERLOGGING
 		);
 	}
 

@@ -14,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -44,8 +43,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -121,7 +119,7 @@ public class IGMetalDetector extends Block implements EntityBlock
 	}
 
 	@Override
-	public void playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player)
+	public BlockState playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player)
 	{
 		// Mirrors vanilla's double block behaviour
 		if(!level.isClientSide&&player.isCreative())
@@ -137,7 +135,7 @@ public class IGMetalDetector extends Block implements EntityBlock
 				}
 			}
 		}
-		super.playerWillDestroy(level, pos, state, player);
+		return super.playerWillDestroy(level, pos, state, player);
 	}
 
 	@Override
@@ -192,15 +190,14 @@ public class IGMetalDetector extends Block implements EntityBlock
 	}
 
 	@Override
-	public @NotNull InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
-										  @NotNull InteractionHand hand, @NotNull BlockHitResult hit)
+	public @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, @NotNull BlockHitResult hit)
 	{
 		if(level.isClientSide) return InteractionResult.SUCCESS;
 
 		IGMetalDetectorEntity detector = getDetector(level, pos, state);
 		if(detector==null||!(player instanceof ServerPlayer serverPlayer)) return InteractionResult.PASS;
 
-		NetworkHooks.openScreen(serverPlayer, detector, detector.getBlockPos());
+		serverPlayer.openMenu(detector, detector.getBlockPos());
 		return InteractionResult.CONSUME;
 	}
 

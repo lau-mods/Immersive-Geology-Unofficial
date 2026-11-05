@@ -9,14 +9,13 @@
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.BloomeryRecipe;
-import com.igteam.immersivegeology.common.block.multiblocks.recipe.RevFurnaceRecipe;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class BloomeryRecipeBuilder extends IEFinishedRecipe<BloomeryRecipeBuilder>
+public class BloomeryRecipeBuilder extends IGRecipeBuilder<BloomeryRecipeBuilder>
 {
 	protected BloomeryRecipeBuilder()
 	{

@@ -21,7 +21,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,7 +66,7 @@ public class IGGenericItem extends Item implements IGFlagItem {
     public @NotNull Component getName(ItemStack stack) {
         if(hasCustomLang)
         {
-            return Component.translatable("item.immersivegeology." + customLang).withStyle(getMaterial(MaterialTexture.base).getRarity().color);
+            return Component.translatable("item.immersivegeology." + customLang).withStyle(getMaterial(MaterialTexture.base).getRarity().color());
         }
 
         List<String> materialList = new ArrayList<>();
@@ -77,7 +76,7 @@ public class IGGenericItem extends Item implements IGFlagItem {
             }
         }
 
-        return Component.translatable("item.immersivegeology." + category.getName(), materialList.toArray()).withStyle(getMaterial(MaterialTexture.base).getRarity().color);
+        return Component.translatable("item.immersivegeology." + category.getName(), materialList.toArray()).withStyle(getMaterial(MaterialTexture.base).getRarity().color());
     }
 
     /**
@@ -91,7 +90,7 @@ public class IGGenericItem extends Item implements IGFlagItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced)
+    public void appendHoverText(ItemStack pStack, @Nullable TooltipContext pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced)
     {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         if(getFlag().equals(ItemCategoryFlags.INGOT) && (getMaterial(MaterialTexture.base) instanceof MetalEnum metal))

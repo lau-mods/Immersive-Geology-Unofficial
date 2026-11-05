@@ -1,6 +1,5 @@
 package com.igteam.immersivegeology;
 
-import blusunrize.immersiveengineering.api.excavator.MineralMix;
 import blusunrize.immersiveengineering.api.multiblocks.TemplateMultiblock;
 import com.igteam.immersivegeology.client.IGClientRenderHandler;
 import com.igteam.immersivegeology.client.IGOverlayHandler;
@@ -11,7 +10,6 @@ import com.igteam.immersivegeology.common.block.multiblocks.IGTemplateMultiblock
 import com.igteam.immersivegeology.common.config.IGClientConfig;
 import com.igteam.immersivegeology.common.config.IGServerConfig;
 import com.igteam.immersivegeology.common.event.IGCommonForgeEvents;
-import com.igteam.immersivegeology.common.network.IGPacketHandler;
 import com.igteam.immersivegeology.common.world.IGWorldSubscription;
 import com.igteam.immersivegeology.core.ClientProxy;
 import com.igteam.immersivegeology.core.CommonProxy;
@@ -24,26 +22,23 @@ import com.igteam.immersivegeology.core.material.helper.flags.IFlagType;
 import com.igteam.immersivegeology.core.material.helper.flags.ItemCategoryFlags;
 import com.igteam.immersivegeology.core.material.helper.material.MaterialInterface;
 import com.igteam.immersivegeology.core.registration.IGContent;
-import com.igteam.immersivegeology.core.registration.IGMultiblockProvider;
 import com.igteam.immersivegeology.core.registration.IGRecipeSerializers;
 import com.igteam.immersivegeology.core.registration.IGRegistrationHolder;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.repository.BuiltInPackSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig.Type;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLLoader;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.InterModComms;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig.Type;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
+import net.neoforged.fml.loading.FMLLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -60,8 +55,7 @@ public class ImmersiveGeology {
         return new CommonProxy();
     });
 
-    public ImmersiveGeology() {
-        IEventBus modEventBus =  FMLJavaModLoadingContext.get().getModEventBus();
+    public ImmersiveGeology(IEventBus modEventBus, ModContainer modContainer) {
         IGLib.IG_LOGGER.info("======== Starting Immersive Geology ========");
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::clientSetup);
@@ -69,39 +63,38 @@ public class ImmersiveGeology {
 
         IGLib.IG_LOGGER.info("- Initializing IG Multiblocks");
         IGRegistrationHolder.initializeMultiblocks();
+        com.igteam.immersivegeology.core.registration.IGMultiblockProvider.BUS_REGISTRATIONS.forEach(register -> register.accept(modEventBus));
 
         IGLib.IG_LOGGER.info("- Recipe Serializer Registration");
         IGRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
 
         IGLib.IG_LOGGER.info("- World Event Handler Registration");
-        MinecraftForge.EVENT_BUS.register(new IGWorldSubscription());
+        NeoForge.EVENT_BUS.register(new IGWorldSubscription());
 
         IGLib.IG_LOGGER.info("- Declared Stone Type Configuration Registration");
 
         // Registered so it can be edited in game and so the file is written with its documentation. The rock
         // types themselves are read straight from this same file during construction, above, because blocks for
         // them have to exist before the registries freeze.
-        ModLoadingContext.get().registerConfig(Type.COMMON, IGStoneTypeConfig.SPEC, IGStoneTypeConfig.FILE_NAME);
+        modContainer.registerConfig(Type.COMMON, IGStoneTypeConfig.SPEC, IGStoneTypeConfig.FILE_NAME);
 
         IGLib.IG_LOGGER.info("- Client Configuration Registration");
-        ModLoadingContext.get().registerConfig(Type.CLIENT, IGClientConfig.CONFIG_SPEC);
+        modContainer.registerConfig(Type.CLIENT, IGClientConfig.CONFIG_SPEC);
 
         IGLib.IG_LOGGER.info("- Server Configuration Registration");
-        ModLoadingContext.get().registerConfig(Type.SERVER, IGServerConfig.CONFIG_SPEC);
+        modContainer.registerConfig(Type.SERVER, IGServerConfig.CONFIG_SPEC);
 
         IGRegistrationHolder.addRegistersToEventBus(modEventBus);
 
-        IGLib.IG_LOGGER.info("- Network Packet Handler Registration");
-        IGPacketHandler.initialize();
-
-        proxy.modConstruction();
+        proxy.modConstruction(modEventBus);
+        modEventBus.addListener(IGRegistrationHolder::registerCapabilities);
     }
 
     private void clientSetup(FMLClientSetupEvent event) {
         IGLib.IG_LOGGER.info("- Custom Creative Menu Registration");
-        MinecraftForge.EVENT_BUS.register(new CreativeMenuHandler());
+        NeoForge.EVENT_BUS.register(new CreativeMenuHandler());
         IGLib.IG_LOGGER.info("- Custom Multiblock Overlay Registration");
-        MinecraftForge.EVENT_BUS.register(new IGOverlayHandler());
+        NeoForge.EVENT_BUS.register(new IGOverlayHandler());
 
         IGLib.IG_LOGGER.info("- Client Render Handler Registration");
         IGClientRenderHandler.register();
@@ -111,7 +104,6 @@ public class ImmersiveGeology {
         supplyMaterialTint();
 
         IGLib.IG_LOGGER.info("- Container And Screen Registration");
-        IGContent.registerContainersAndScreens();
 
         IGLib.IG_LOGGER.info("- Custom IE Manual Entry Registration");
         IGContent.initializeManualEntries();
@@ -175,36 +167,36 @@ public class ImmersiveGeology {
 
     @NotNull
     private static ResourceLocation getResourceLocationTest(IFlagType<?> pattern, GeologyMaterial base) {
-        ResourceLocation test = new ResourceLocation(IGLib.MODID, "textures/" + (pattern instanceof ItemCategoryFlags ? "item" : "block") + "/colored/" + base.getName() + "/" + pattern.getName() + ".png");
+        ResourceLocation test = ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "textures/" + (pattern instanceof ItemCategoryFlags ? "item" : "block") + "/colored/" + base.getName() + "/" + pattern.getName() + ".png");
         if (pattern.equals(BlockCategoryFlags.STAIRS))
         {
-            test =  new ResourceLocation(IGLib.MODID, "textures/" + (pattern instanceof ItemCategoryFlags ? "item" : "block") + "/colored/" + base.getName() + "/" + BlockCategoryFlags.STORAGE_BLOCK.getName() + ".png");
+            test =  ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "textures/" + (pattern instanceof ItemCategoryFlags ? "item" : "block") + "/colored/" + base.getName() + "/" + BlockCategoryFlags.STORAGE_BLOCK.getName() + ".png");
         }
 
         if (pattern.equals(BlockCategoryFlags.FENCE))
         {
-            test =  new ResourceLocation(IGLib.MODID, "textures/" + (pattern instanceof ItemCategoryFlags ? "item" : "block") + "/colored/" + base.getName() + "/" + BlockCategoryFlags.STORAGE_BLOCK.getName() + ".png");
+            test =  ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "textures/" + (pattern instanceof ItemCategoryFlags ? "item" : "block") + "/colored/" + base.getName() + "/" + BlockCategoryFlags.STORAGE_BLOCK.getName() + ".png");
         }
 
         if (pattern.equals(BlockCategoryFlags.SLAB))
         {
-            test =  new ResourceLocation(IGLib.MODID, "textures/" + (pattern instanceof ItemCategoryFlags ? "item" : "block") + "/colored/" + base.getName() + "/" + BlockCategoryFlags.STORAGE_BLOCK.getName() + ".png");
+            test =  ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "textures/" + (pattern instanceof ItemCategoryFlags ? "item" : "block") + "/colored/" + base.getName() + "/" + BlockCategoryFlags.STORAGE_BLOCK.getName() + ".png");
         }
 
         if (pattern.equals(BlockCategoryFlags.SHEETMETAL_SLAB))
         {
-            test =  new ResourceLocation(IGLib.MODID, "textures/" + (pattern instanceof ItemCategoryFlags ? "item" : "block") + "/colored/" + base.getName() + "/" + BlockCategoryFlags.SHEETMETAL_BLOCK.getName() + ".png");
+            test =  ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "textures/" + (pattern instanceof ItemCategoryFlags ? "item" : "block") + "/colored/" + base.getName() + "/" + BlockCategoryFlags.SHEETMETAL_BLOCK.getName() + ".png");
         }
 
         if (pattern.equals(BlockCategoryFlags.SHEETMETAL_STAIRS))
         {
-            test =  new ResourceLocation(IGLib.MODID, "textures/" + (pattern instanceof ItemCategoryFlags ? "item" : "block") + "/colored/" + base.getName() + "/" + BlockCategoryFlags.SHEETMETAL_BLOCK.getName() + ".png");
+            test =  ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "textures/" + (pattern instanceof ItemCategoryFlags ? "item" : "block") + "/colored/" + base.getName() + "/" + BlockCategoryFlags.SHEETMETAL_BLOCK.getName() + ".png");
         }
 
         if(pattern.equals(ItemCategoryFlags.NORMAL_ORE) || pattern.equals(ItemCategoryFlags.RICH_ORE) || pattern.equals(ItemCategoryFlags.POOR_ORE))
         {
             OreRichness richness = pattern.equals(ItemCategoryFlags.NORMAL_ORE) ? OreRichness.NORMAL : (pattern.equals(ItemCategoryFlags.RICH_ORE) ? OreRichness.RICH : OreRichness.POOR);
-            test = new ResourceLocation(IGLib.MODID, "textures/item/colored/raw_ore/"+base.getName().toLowerCase(Locale.ROOT)+"/"+richness.getSanitizedName() + ".png");
+            test = ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "textures/item/colored/raw_ore/"+base.getName().toLowerCase(Locale.ROOT)+"/"+richness.getSanitizedName() + ".png");
         }
         return test;
     }
@@ -217,7 +209,7 @@ public class ImmersiveGeology {
 
         IGRegistrationHolder.buildMaterialRecipes();
         IGLib.IG_LOGGER.info("- Event Handler Registration");
-        MinecraftForge.EVENT_BUS.register(new IGCommonForgeEvents());
+        NeoForge.EVENT_BUS.register(new IGCommonForgeEvents());
 
         proxy.registerFluidBehaviour(event);
     }

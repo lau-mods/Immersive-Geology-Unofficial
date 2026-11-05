@@ -8,15 +8,15 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.google.gson.JsonArray;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.FoundryAlloyRecipe;
 import net.minecraft.tags.TagKey;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.minecraft.world.level.material.Fluid;
 
-public class FoundryAlloyRecipeBuilder extends IEFinishedRecipe<FoundryAlloyRecipeBuilder>
+public class FoundryAlloyRecipeBuilder extends IGRecipeBuilder<FoundryAlloyRecipeBuilder>
 {
 	private final JsonArray inputs = new JsonArray();
 
@@ -33,12 +33,12 @@ public class FoundryAlloyRecipeBuilder extends IEFinishedRecipe<FoundryAlloyReci
 
 	public FoundryAlloyRecipeBuilder addPart(TagKey<Fluid> fluidTag, int parts)
 	{
-		return addPart(new FluidTagInput(fluidTag, parts));
+		return addPart(SizedFluidIngredient.of(fluidTag, parts));
 	}
 
-	public FoundryAlloyRecipeBuilder addPart(FluidTagInput part)
+	public FoundryAlloyRecipeBuilder addPart(SizedFluidIngredient part)
 	{
-		inputs.add(part.serialize());
+		inputs.add(SizedFluidIngredient.FLAT_CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, part).getOrThrow());
 		return this;
 	}
 }

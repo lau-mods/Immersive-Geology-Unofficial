@@ -1,7 +1,5 @@
 package com.igteam.immersivegeology.core.material.data.mineral;
 
-import blusunrize.immersiveengineering.api.crafting.builders.CrusherRecipeBuilder;
-import blusunrize.immersiveengineering.common.register.IEItems;
 import blusunrize.immersiveengineering.common.register.IEItems.Ingredients;
 import com.igteam.immersivegeology.common.world.features.helper.noise.IGGenerationType;
 import com.igteam.immersivegeology.core.lib.IGLib;
@@ -10,17 +8,11 @@ import com.igteam.immersivegeology.core.material.data.types.MaterialSulphideMine
 import com.igteam.immersivegeology.core.material.helper.flags.*;
 import com.igteam.immersivegeology.core.material.helper.material.MaterialInterface;
 import com.igteam.immersivegeology.core.material.helper.material.StoneFormation;
-import com.igteam.immersivegeology.core.material.helper.material.recipe.helper.IGRecipeNode;
 import com.igteam.immersivegeology.core.material.helper.material.recipe.methods.IECrushingMethod;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import com.igteam.immersivegeology.core.material.helper.material.recipe.IGStageDesignation;
 import com.igteam.immersivegeology.core.material.helper.material.recipe.helper.IGMethodBuilder;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -34,8 +26,8 @@ public class MaterialSphalerite extends MaterialSulphideMineral
         super();
         this.acceptableStoneTypes.add(StoneFormation.IGNEOUS_INTRUSIVE);
         this.acceptableStoneTypes.add(StoneFormation.MINECRAFT_STONE);
-        addFlags(ModFlags.TFC, MaterialFlags.EXISTING_IMPLEMENTATION);
-        addExistingFlag(ModFlags.TFC, BlockCategoryFlags.ORE_BLOCK);
+        
+
         addFlags(ItemCategoryFlags.SLAG);
 		addFlags(ItemCategoryFlags.PELLET);
 		addFlags(ItemCategoryFlags.POWDERED_SLAG);

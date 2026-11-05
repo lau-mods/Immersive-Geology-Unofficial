@@ -9,15 +9,13 @@
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.BallmillRecipe;
-import com.igteam.immersivegeology.common.block.multiblocks.recipe.RotaryKilnRecipe;
-import com.igteam.immersivegeology.common.block.multiblocks.recipe.serializer.BallmillRecipeSerializer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class BallmillRecipeBuilder extends IEFinishedRecipe<BallmillRecipeBuilder>
+public class BallmillRecipeBuilder extends IGRecipeBuilder<BallmillRecipeBuilder>
 {
 	protected BallmillRecipeBuilder()
 	{

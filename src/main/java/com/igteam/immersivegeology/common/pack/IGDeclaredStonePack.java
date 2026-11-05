@@ -36,7 +36,11 @@ public class IGDeclaredStonePack implements PackResources
 {
 	public static final String PACK_ID = IGLib.MODID+":declared_stone_types";
 
-	private final PackType packType;
+	public static final net.minecraft.server.packs.PackLocationInfo LOCATION = new net.minecraft.server.packs.PackLocationInfo(
+            PACK_ID, Component.literal("Immersive Geology declared stone types"),
+            net.minecraft.server.packs.repository.PackSource.BUILT_IN, java.util.Optional.empty());
+
+    private final PackType packType;
 	private Map<ResourceLocation, byte[]> resources;
 	private Set<String> namespaces;
 
@@ -114,16 +118,11 @@ public class IGDeclaredStonePack implements PackResources
 	}
 
 	@Override
-	public String packId()
+	public net.minecraft.server.packs.PackLocationInfo location()
 	{
-		return PACK_ID;
+		return LOCATION;
 	}
 
-	@Override
-	public boolean isBuiltin()
-	{
-		return true;
-	}
 
 	@Override
 	public void close()

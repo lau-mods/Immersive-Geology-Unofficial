@@ -6,16 +6,13 @@ import com.igteam.immersivegeology.core.material.data.enums.MineralEnum;
 import com.igteam.immersivegeology.core.material.helper.flags.BlockCategoryFlags;
 import com.igteam.immersivegeology.core.material.helper.flags.IFlagType;
 import com.igteam.immersivegeology.core.material.helper.flags.MaterialFlags;
-import com.igteam.immersivegeology.core.material.helper.material.MaterialInterface;
 import com.igteam.immersivegeology.core.material.helper.material.StoneFormation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 public class MaterialStone extends GeologyMaterial {
@@ -36,7 +33,7 @@ public class MaterialStone extends GeologyMaterial {
     public ResourceLocation getTextureLocation(IFlagType<?> flag) {
         // As this should always be a default stone we use the id minecraft and default it to whatever it is.
         // If we want to add support for other mods this will need to change
-        if(flag instanceof BlockCategoryFlags) return new ResourceLocation("minecraft", "block/"+getName());
+        if(flag instanceof BlockCategoryFlags) return ResourceLocation.fromNamespaceAndPath("minecraft", "block/"+getName());
         return super.getTextureLocation(flag);
     }
 
@@ -66,8 +63,5 @@ public class MaterialStone extends GeologyMaterial {
         return List.of();
     }
 
-    public String getTFCStoneLoc()
-    {
-        return "tfc:rock/raw/" + getName().toLowerCase(Locale.ROOT);
-    }
+
 }

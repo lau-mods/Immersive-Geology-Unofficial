@@ -24,14 +24,14 @@ import java.util.Optional;
 
 public class RuinedFactory extends Structure
 {
-	public static final Codec<RuinedFactory> CODEC = RecordCodecBuilder.<RuinedFactory>mapCodec(instance ->
+	public static final com.mojang.serialization.MapCodec<RuinedFactory> CODEC = RecordCodecBuilder.<RuinedFactory>mapCodec(instance ->
 			instance.group(
 					RuinedFactory.settingsCodec(instance),
 					StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
 					Codec.intRange(0, 30).fieldOf("size").forGetter(structure -> structure.size),
 					Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter)
 			).apply(instance, RuinedFactory::new)
-	).codec();
+	);
 
 	private final Holder<StructureTemplatePool> startPool;
 	private final int size;
@@ -72,7 +72,10 @@ public class RuinedFactory extends Structure
 				structurePos,
 				false, // useExpansionHack
 				Optional.empty(), // No heightmap projection needed
-				this.maxDistanceFromCenter
+				this.maxDistanceFromCenter,
+                net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup.EMPTY,
+                net.minecraft.world.level.levelgen.structure.pools.DimensionPadding.ZERO,
+                net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings.APPLY_WATERLOGGING
 		);
 	}
 

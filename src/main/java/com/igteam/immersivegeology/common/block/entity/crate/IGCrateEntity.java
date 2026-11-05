@@ -9,14 +9,12 @@
 package com.igteam.immersivegeology.common.block.entity.crate;
 
 import blusunrize.immersiveengineering.api.IEApi;
-import blusunrize.immersiveengineering.api.utils.CapabilityUtils;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces;
 import blusunrize.immersiveengineering.common.util.Utils;
 import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import com.igteam.immersivegeology.common.block.helper.IGBlockType;
 import com.igteam.immersivegeology.common.menu.IGCrateMenu;
-import com.igteam.immersivegeology.core.lib.IGLib;
 import com.igteam.immersivegeology.core.material.data.enums.MetalEnum;
 import com.igteam.immersivegeology.core.material.helper.flags.BlockCategoryFlags;
 import com.igteam.immersivegeology.core.material.helper.material.MaterialInterface;
@@ -24,12 +22,14 @@ import com.igteam.immersivegeology.core.material.helper.material.MaterialTexture
 import com.igteam.immersivegeology.core.registration.IGMenuTypes;
 import com.igteam.immersivegeology.core.registration.IGRegistrationHolder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -40,27 +40,23 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class IGCrateEntity extends RandomizableContainerBlockEntity implements IIEInventory, IEBlockInterfaces.IBlockEntityDrop, IEBlockInterfaces.IComparatorOverride
 {
 	public static final int CONTAINER_SIZE = 36;
 	private NonNullList<ItemStack> inventory;
-	private ListTag enchantments;
-	private final LazyOptional<IItemHandler> inventoryCap;
+	private ItemEnchantments enchantments = ItemEnchantments.EMPTY;
+	public final IItemHandler inventoryCap;
 
 	public IGCrateEntity(BlockPos pos, BlockState state) {
 		super(resolveEntityType(state), pos, state);
 		this.inventory = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
-		this.inventoryCap = CapabilityUtils.constantOptional(new IEInventoryHandler(CONTAINER_SIZE, this));
+		this.inventoryCap = new IEInventoryHandler(CONTAINER_SIZE, this);
 	}
 
 	private static BlockEntityType<?> resolveEntityType(BlockState state) {
@@ -95,35 +91,18 @@ public class IGCrateEntity extends RandomizableContainerBlockEntity implements I
 		return new IGCrateMenu(IGMenuTypes.CRATE.get(), pContainerId, pInventory, this);
 	}
 
-	public void load(CompoundTag nbt) {
-		super.load(nbt);
-		this.loadIEData(nbt);
+	@Override
+	protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
+		super.loadAdditional(nbt, provider);
+		enchantments = ItemEnchantments.CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), nbt.getCompound("enchantments")).result().orElse(ItemEnchantments.EMPTY);
+		if(!tryLoadLootTable(nbt)) ContainerHelper.loadAllItems(nbt, inventory, provider);
 	}
 
-	private void loadIEData(CompoundTag nbt) {
-		if (nbt.contains("enchantments", 9)) {
-			this.enchantments = nbt.getList("enchantments", 10);
-		}
-
-		if (nbt.contains("lootTable", 8) && !nbt.contains("LootTable")) {
-			nbt.putString("LootTable", nbt.getString("lootTable"));
-		}
-
-		if (!this.tryLoadLootTable(nbt)) {
-			ContainerHelper.loadAllItems(nbt, this.inventory);
-		}
-
-	}
-
-	protected void saveAdditional(CompoundTag nbt) {
-		super.saveAdditional(nbt);
-		if (this.enchantments != null && this.enchantments.size() > 0) {
-			nbt.put("enchantments", this.enchantments);
-		}
-
-		if (!this.trySaveLootTable(nbt)) {
-			ContainerHelper.saveAllItems(nbt, this.inventory);
-		}
+	@Override
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
+		super.saveAdditional(nbt, provider);
+		nbt.put("enchantments", ItemEnchantments.CODEC.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), enchantments).getOrThrow());
+		if(!trySaveLootTable(nbt)) ContainerHelper.saveAllItems(nbt, inventory, provider);
 	}
 
 	protected NonNullList<ItemStack> getItems() {
@@ -152,22 +131,11 @@ public class IGCrateEntity extends RandomizableContainerBlockEntity implements I
 	}
 
 	public void getBlockEntityDrop(LootContext context, Consumer<ItemStack> drop) {
-		ItemStack stack = new ItemStack(this.getBlockState().getBlock(), 1);
-		CompoundTag tag = new CompoundTag();
-		ContainerHelper.saveAllItems(tag, this.inventory, false);
-		if (!tag.isEmpty()) {
-			stack.setTag(tag);
-		}
-
-		Component customName = this.getCustomName();
-		if (customName != null) {
-			stack.setHoverName(customName);
-		}
-
-		if (this.enchantments != null && this.enchantments.size() > 0) {
-			stack.getOrCreateTag().put("ench", this.enchantments);
-		}
-
+		ItemStack stack = new ItemStack(getBlockState().getBlock());
+		stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(inventory));
+		Component customName = getCustomName();
+		if(customName!=null) stack.set(DataComponents.CUSTOM_NAME, customName);
+		stack.set(DataComponents.ENCHANTMENTS, enchantments);
 		drop.accept(stack);
 	}
 
@@ -176,26 +144,12 @@ public class IGCrateEntity extends RandomizableContainerBlockEntity implements I
 	}
 
 	public void onBEPlaced(ItemStack stack) {
-		if (stack.hasTag()) {
-			this.loadIEData(stack.getOrCreateTag());
-			if (stack.hasCustomHoverName()) {
-				this.setCustomName(stack.getHoverName());
-			}
-
-			this.enchantments = stack.getEnchantmentTags();
-		}
-
+		enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
 	}
 
-	@Nonnull
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-		return cap == ForgeCapabilities.ITEM_HANDLER ? this.inventoryCap.cast() : super.getCapability(cap, side);
-	}
 
-	public void invalidateCaps() {
-		super.invalidateCaps();
-		this.inventoryCap.invalidate();
-	}
+
+
 
 	public boolean canPlaceItem(int index, ItemStack stack) {
 		return this.isStackValid(index, stack);

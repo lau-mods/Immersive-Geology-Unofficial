@@ -8,23 +8,21 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.BasicChemicalRecipe;
-import com.igteam.immersivegeology.common.block.multiblocks.recipe.ChemicalRecipe;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
-public class BasicChemicalRecipeBuilder extends IEFinishedRecipe<BasicChemicalRecipeBuilder>
+public class BasicChemicalRecipeBuilder extends IGRecipeBuilder<BasicChemicalRecipeBuilder>
 {
 	protected BasicChemicalRecipeBuilder()
 	{
 		super(BasicChemicalRecipe.SERIALIZER.get());
 	}
 
-	public static BasicChemicalRecipeBuilder builder(ItemStack result, FluidStack fluidStack, IngredientWithSize itemInput, FluidTagInput fluidInputA, FluidTagInput fluidInputB, int damage_per_second)
+	public static BasicChemicalRecipeBuilder builder(ItemStack result, FluidStack fluidStack, IngredientWithSize itemInput, SizedFluidIngredient fluidInputA, SizedFluidIngredient fluidInputB, int damage_per_second)
 	{
 		BasicChemicalRecipeBuilder builder = new BasicChemicalRecipeBuilder().addFluid("fluidResult", fluidStack).addFluid("fluidResult", fluidStack)
 				.addIngredient("itemInput",itemInput);
@@ -53,7 +51,7 @@ public class BasicChemicalRecipeBuilder extends IEFinishedRecipe<BasicChemicalRe
 		return builder;
 	}
 
-	public static BasicChemicalRecipeBuilder builder(IngredientWithSize result, FluidStack fluidStack, IngredientWithSize itemInput, FluidTagInput fluidInputA, FluidTagInput fluidInputB, int damage_per_second)
+	public static BasicChemicalRecipeBuilder builder(IngredientWithSize result, FluidStack fluidStack, IngredientWithSize itemInput, SizedFluidIngredient fluidInputA, SizedFluidIngredient fluidInputB, int damage_per_second)
 	{
 		BasicChemicalRecipeBuilder builder = new BasicChemicalRecipeBuilder().addFluid("fluidResult", fluidStack).addFluid("fluidResult", fluidStack)
 				.addIngredient("itemInput",itemInput);
@@ -76,7 +74,7 @@ public class BasicChemicalRecipeBuilder extends IEFinishedRecipe<BasicChemicalRe
 		return builder;
 	}
 
-	public static BasicChemicalRecipeBuilder builder(ItemStack result, FluidStack fluidStack, IngredientWithSize itemInput, FluidTagInput fluidInputA, FluidTagInput fluidInputB)
+	public static BasicChemicalRecipeBuilder builder(ItemStack result, FluidStack fluidStack, IngredientWithSize itemInput, SizedFluidIngredient fluidInputA, SizedFluidIngredient fluidInputB)
 	{
 		BasicChemicalRecipeBuilder builder = new BasicChemicalRecipeBuilder().addFluid("fluidResult", fluidStack).addFluid("fluidResult", fluidStack)
 				.addIngredient("itemInput",itemInput);

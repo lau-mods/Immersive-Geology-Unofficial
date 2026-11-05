@@ -12,8 +12,7 @@ import com.igteam.immersivegeology.common.item.helper.IGFlagItem;
 import com.igteam.immersivegeology.core.material.helper.flags.ItemCategoryFlags;
 import com.igteam.immersivegeology.core.registration.IGRecipeSerializers;
 import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -24,9 +23,9 @@ import javax.annotation.Nonnull;
 
 public class IGMoldShapingRecipe extends ShapelessRecipe
 {
-	public IGMoldShapingRecipe(ResourceLocation id, String group, CraftingBookCategory category, ItemStack result, NonNullList<Ingredient> ingredients)
+	public IGMoldShapingRecipe(String group, CraftingBookCategory category, ItemStack result, NonNullList<Ingredient> ingredients)
 	{
-		super(id, group, category, result, ingredients);
+		super(group, category, result, ingredients);
 	}
 
 	public static boolean isMoldBlank(ItemStack stack)
@@ -37,9 +36,9 @@ public class IGMoldShapingRecipe extends ShapelessRecipe
 
 	@Nonnull
 	@Override
-	public NonNullList<ItemStack> getRemainingItems(@Nonnull CraftingContainer inv)
+	public NonNullList<ItemStack> getRemainingItems(@Nonnull CraftingInput inv)
 	{
-		NonNullList<ItemStack> remaining = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+		NonNullList<ItemStack> remaining = NonNullList.withSize(inv.size(), ItemStack.EMPTY);
 		for(int slot = 0; slot < remaining.size(); slot++)
 		{
 			ItemStack stack = inv.getItem(slot);

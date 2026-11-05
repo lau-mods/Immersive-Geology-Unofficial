@@ -17,7 +17,6 @@ import com.igteam.immersivegeology.common.config.IGServerConfig;
 import com.igteam.immersivegeology.common.config.IGServerConfig.Ores.OreConfig;
 import com.igteam.immersivegeology.common.recipe.IGGeoRecipe;
 import com.igteam.immersivegeology.common.world.IWorldGenConfig;
-import com.igteam.immersivegeology.common.world.compat.IGTFCWorld;
 import com.igteam.immersivegeology.core.material.GeologyMaterial;
 import com.igteam.immersivegeology.core.material.data.enums.MineralEnum;
 import com.igteam.immersivegeology.core.material.data.enums.StoneEnum;
@@ -37,12 +36,10 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -130,9 +127,9 @@ public class IGGeologyCategory extends IGRecipeCategory<IGGeoRecipe>
 
 	private static final int ROLL_RANGE = 1_000_000;
 	private static final int ROLL_RANGE_END = 750_000;
-	private static final ResourceLocation OVERWORLD = new ResourceLocation("minecraft", "overworld");
-	private static final ResourceLocation NETHER = new ResourceLocation("minecraft", "the_nether");
-	private static final ResourceLocation THE_END = new ResourceLocation("minecraft", "the_end");
+	private static final ResourceLocation OVERWORLD = ResourceLocation.fromNamespaceAndPath("minecraft", "overworld");
+	private static final ResourceLocation NETHER = ResourceLocation.fromNamespaceAndPath("minecraft", "the_nether");
+	private static final ResourceLocation THE_END = ResourceLocation.fromNamespaceAndPath("minecraft", "the_end");
 
 	private static final FormattedCharSequence ELLIPSIS = FormattedCharSequence.forward("...", Style.EMPTY);
 
@@ -147,7 +144,7 @@ public class IGGeologyCategory extends IGRecipeCategory<IGGeoRecipe>
 	public IGGeologyCategory(IGuiHelper helper)
 	{
 		super(helper, JEIRecipeTypes.GEOHINT, "block.immersivegeology.geohint");
-		ResourceLocation background = new ResourceLocation("minecraft", "textures/block/dirt.png");
+		ResourceLocation background = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/block/dirt.png");
 		IDrawableStatic back = guiHelper.drawableBuilder(background, 0, 0, PAGE_WIDTH, PAGE_HEIGHT)
 				.setTextureSize(16, 16).build();
 		setBackground(back);
@@ -448,8 +445,7 @@ public class IGGeologyCategory extends IGRecipeCategory<IGGeoRecipe>
 					continue;
 				}
 				anywhere = true;
-				lines.add(destination.viaTFC()?Component.translatable(KEY+"dimension_tfc", name)
-						.withStyle(ChatFormatting.GRAY): name);
+				lines.add(name);
 			}
 			if(!anywhere) lines.add(Component.translatable(KEY+"nowhere_tip").withStyle(ChatFormatting.GRAY));
 			return lines;
@@ -521,7 +517,7 @@ public class IGGeologyCategory extends IGRecipeCategory<IGGeoRecipe>
 	{
 		if(!generationEnabled(config)) return 0;
 		List<? extends String> dimensions = dimensionsOf(config);
-		boolean endOnly = dimensions.size()==1&&THE_END.equals(new ResourceLocation(dimensions.get(0)));
+		boolean endOnly = dimensions.size()==1&&THE_END.equals(ResourceLocation.parse(dimensions.get(0)));
 		return Math.min(1.0, (double)IGServerConfig.getOrDefault(config.generationChance)/(endOnly?ROLL_RANGE_END
 				: ROLL_RANGE));
 	}
@@ -648,7 +644,7 @@ public class IGGeologyCategory extends IGRecipeCategory<IGGeoRecipe>
 		return IGServerConfig.getOrDefault(config.dimension_whitelist);
 	}
 
-	private record Destination(ResourceLocation id, boolean hosts, boolean viaTFC)
+	private record Destination(ResourceLocation id, boolean hosts)
 	{
 	}
 
@@ -656,59 +652,31 @@ public class IGGeologyCategory extends IGRecipeCategory<IGGeoRecipe>
 	{
 		GeologyMaterial material = facts.material();
 		boolean vanillaStone = material.acceptableStoneType(StoneEnum.MCStone);
-		boolean tfcOverworld = tfcOverworldOverride()&&IGTFCWorld.canHostInOverworld(material);
 
 		List<Destination> destinations = new ArrayList<>();
-		boolean overworldListed = false;
 		for(String id : dimensionsOf(config))
 		{
-			if(!ResourceLocation.isValidResourceLocation(id)) continue;
-			ResourceLocation dimension = new ResourceLocation(id);
+			if(!(ResourceLocation.tryParse(id)!=null)) continue;
+			ResourceLocation dimension = ResourceLocation.parse(id);
 
 			boolean hosts;
-			boolean viaTFC = false;
 			if(OVERWORLD.equals(dimension))
 			{
-				overworldListed = true;
-				hosts = vanillaStone||tfcOverworld;
-				viaTFC = hosts&&!vanillaStone;
+				hosts = vanillaStone;
 			}
 			else if(NETHER.equals(dimension)) hosts = material.acceptableStoneType(StoneEnum.MCNetherrack);
 			else if(THE_END.equals(dimension)) hosts = material.acceptableStoneType(StoneEnum.MCEndStone);
 			else hosts = true;
-			destinations.add(new Destination(dimension, hosts, viaTFC));
+			destinations.add(new Destination(dimension, hosts));
 		}
 
-		if(tfcOverworld&&!overworldListed) destinations.add(0, new Destination(OVERWORLD, true, true));
 		return destinations;
 	}
 
-	private static Level checkedLevel;
-	private static boolean checkedIsTFC;
 
-	private static boolean tfcOverworldOverride()
-	{
-		if(!ModFlags.TFC.isStrictlyLoaded()) return false;
-		if(!IGServerConfig.getOrDefault(IGServerConfig.TFC.allow_all_in_overworld)) return false;
 
-		Minecraft minecraft = Minecraft.getInstance();
-		Level level = minecraft.level;
-		if(level==null) return false;
-		if(level!=checkedLevel)
-		{
-			checkedLevel = level;
-			checkedIsTFC = isTFCWorld(minecraft);
-		}
-		return checkedIsTFC;
-	}
 
-	private static boolean isTFCWorld(Minecraft minecraft)
-	{
-		IntegratedServer server = minecraft.getSingleplayerServer();
-		if(server==null) return true;
-		ServerLevel overworld = server.getLevel(Level.OVERWORLD);
-		return overworld==null||IGTFCWorld.isTFCWorld(overworld);
-	}
+
 
 	private void drawString(GuiGraphics graphics, Component text, int x, int y, int colour)
 	{

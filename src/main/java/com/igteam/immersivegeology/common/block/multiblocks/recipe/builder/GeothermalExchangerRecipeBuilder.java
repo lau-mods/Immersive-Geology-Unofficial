@@ -8,18 +8,14 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
-import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
-import com.igteam.immersivegeology.common.block.multiblocks.recipe.CrystallizerRecipe;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.GeothermalExchangerRecipe;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
-public class GeothermalExchangerRecipeBuilder extends IEFinishedRecipe<GeothermalExchangerRecipeBuilder>
+public class GeothermalExchangerRecipeBuilder extends IGRecipeBuilder<GeothermalExchangerRecipeBuilder>
 {
 	protected GeothermalExchangerRecipeBuilder()
 	{
@@ -31,7 +27,7 @@ public class GeothermalExchangerRecipeBuilder extends IEFinishedRecipe<Geotherma
 		return new GeothermalExchangerRecipeBuilder().addFluid("fluidResult", fluid_out);
 	}
 
-	public GeothermalExchangerRecipeBuilder addInput(FluidTagInput fluidTag)
+	public GeothermalExchangerRecipeBuilder addInput(SizedFluidIngredient fluidTag)
 	{
 		return addFluidTag(generateSafeInputKey(), fluidTag);
 	}

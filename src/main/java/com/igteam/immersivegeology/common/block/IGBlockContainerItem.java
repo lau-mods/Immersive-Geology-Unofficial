@@ -13,9 +13,6 @@ import blusunrize.immersiveengineering.common.blocks.IEBaseBlock;
 import com.igteam.immersivegeology.common.block.helper.IGBlockType;
 import com.igteam.immersivegeology.common.item.IGGenericBlockItem;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.BundleTooltip;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -67,22 +64,8 @@ public class IGBlockContainerItem extends IGGenericBlockItem
 	@Override
 	public Optional<TooltipComponent> getTooltipImage(@Nonnull ItemStack stack)
 	{
-		if(stack.hasTag())
-		{
-			CompoundTag tag = stack.getOrCreateTag();
-			if(tag.contains("Items"))
-			{
-				// manual readout, skipping empty slots
-				ListTag list = tag.getList("Items", 10);
-				NonNullList<ItemStack> items = NonNullList.create();
-				list.forEach(e -> {
-					ItemStack s = ItemStack.of((CompoundTag)e);
-					if(!s.isEmpty())
-						items.add(s);
-				});
-				return Optional.of(new BundleTooltip(items, 0));
-			}
-		}
+		var contents = stack.get(net.minecraft.core.component.DataComponents.CONTAINER);
+		if(contents!=null) return Optional.of(new BundleTooltip(new net.minecraft.world.item.component.BundleContents(contents.stream().toList())));
 		return super.getTooltipImage(stack);
 	}
 

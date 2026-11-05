@@ -8,15 +8,14 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.IERecipeSerializer;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.GeothermalConversionRecipe;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
-public class GeothermalConversionRecipeBuilder  extends IEFinishedRecipe<GeothermalConversionRecipeBuilder>
+public class GeothermalConversionRecipeBuilder  extends IGRecipeBuilder<GeothermalConversionRecipeBuilder>
 {
 
 	private GeothermalConversionRecipeBuilder(Block transitionBlock, int blockHeat, @Nullable Pair<Block, Integer> upperBound, @Nullable Pair<Block, Integer> lowerBound)

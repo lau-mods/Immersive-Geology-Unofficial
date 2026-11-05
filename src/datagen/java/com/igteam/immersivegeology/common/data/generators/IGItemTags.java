@@ -31,8 +31,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.Collection;
 import java.util.Locale;
@@ -40,7 +40,6 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static com.igteam.immersivegeology.common.data.helper.TFCDatagenCompat.getTFCItemTag;
 
 public class IGItemTags extends ItemTagsProvider
 {
@@ -92,18 +91,7 @@ public class IGItemTags extends ItemTagsProvider
 							if(itemFlag.equals(ItemCategoryFlags.INGOT))
 							{
 								if(material.hasFlag(MaterialFlags.EXISTING_IMPLEMENTATION)) continue;
-								if(ModFlags.TFC.isStrictlyLoaded())
-								{
-									TagKey<Item> tagKey = getTFCItemTag("PILEABLE_INGOTS");
-									if(tagKey==null)
-									{
-										IGLib.IG_LOGGER.warn("Skipped TFC Tag due to null tag");
-									}
-									else
-									{
-										tag(tagKey).add(item);
-									}
-								}
+
 								tag(Tags.Items.INGOTS).add(item);
 							}
 							if(itemFlag.equals(ItemCategoryFlags.PLATE))
@@ -171,8 +159,8 @@ public class IGItemTags extends ItemTagsProvider
 					useOptionalTag = false;
 					String name = oreBlock.getIGDescriptionId().toLowerCase(Locale.ROOT);
 					String id = name.substring(name.lastIndexOf('.')+1);
-					tag(Tags.Items.ORES).addOptional(new ResourceLocation(IGLib.MODID, id));
-					tag(material.getItemMaterialTag()).addOptional(new ResourceLocation(IGLib.MODID, id));
+					tag(Tags.Items.ORES).addOptional(ResourceLocation.fromNamespaceAndPath(IGLib.MODID, id));
+					tag(material.getItemMaterialTag()).addOptional(ResourceLocation.fromNamespaceAndPath(IGLib.MODID, id));
 					continue;
 				}
 				tag(Tags.Items.ORES).add(oreBlock.asIGItem());

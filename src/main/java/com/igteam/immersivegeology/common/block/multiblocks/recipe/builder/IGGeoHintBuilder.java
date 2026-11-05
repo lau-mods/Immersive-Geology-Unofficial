@@ -8,19 +8,15 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
-import com.igteam.immersivegeology.common.block.multiblocks.recipe.TurbineFuel;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.igteam.immersivegeology.common.recipe.IGGeoRecipe;
-import com.igteam.immersivegeology.core.lib.IGLib;
 import com.igteam.immersivegeology.core.material.GeologyMaterial;
 import com.igteam.immersivegeology.core.material.data.enums.MetalEnum;
 import com.igteam.immersivegeology.core.material.data.enums.MineralEnum;
 import com.igteam.immersivegeology.core.material.data.types.MaterialMineral;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.material.Fluid;
 import java.util.Locale;
 
-public class IGGeoHintBuilder extends IEFinishedRecipe<IGGeoHintBuilder>
+public class IGGeoHintBuilder extends IGRecipeBuilder<IGGeoHintBuilder>
 {
 
 	private static String capitalize(String input)

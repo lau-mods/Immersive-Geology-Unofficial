@@ -9,8 +9,6 @@ import com.igteam.immersivegeology.core.material.data.enums.MineralEnum;
 import com.igteam.immersivegeology.core.material.data.types.MaterialSulphideMineral;
 import com.igteam.immersivegeology.core.material.helper.flags.IFlagType;
 import com.igteam.immersivegeology.core.material.helper.flags.ItemCategoryFlags;
-import com.igteam.immersivegeology.core.material.helper.flags.MaterialFlags;
-import com.igteam.immersivegeology.core.material.helper.flags.ModFlags;
 import com.igteam.immersivegeology.core.material.helper.material.CrystalFamily;
 import com.igteam.immersivegeology.core.material.helper.material.MaterialColorHelper;
 import com.igteam.immersivegeology.core.material.helper.material.MaterialInterface;
@@ -34,7 +32,7 @@ public class MaterialChalcopyrite extends MaterialSulphideMineral
         super();
         this.acceptableStoneTypes.add(StoneFormation.IGNEOUS_INTRUSIVE);
         this.acceptableStoneTypes.add(StoneFormation.SEDIMENTARY);
-        addFlags(ModFlags.TFC, MaterialFlags.EXISTING_IMPLEMENTATION);
+        
         removeMaterialFlags(ItemCategoryFlags.GRIT);
         removeMaterialFlags(ItemCategoryFlags.POWDER);
 

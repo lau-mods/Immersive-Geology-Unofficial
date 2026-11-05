@@ -15,10 +15,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 
 public class IGItemPellet extends IGGenericItem
@@ -29,7 +27,7 @@ public class IGItemPellet extends IGGenericItem
 	}
 
 	@Override
-	public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced)
+	public void appendHoverText(ItemStack pStack, @Nullable TooltipContext pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced)
 	{
 		MaterialInterface<?> material = getMaterial(MaterialTexture.base).getPrimaryProduct();
 		pTooltipComponents.add(Component.translatable("material.immersivegeology." + material.getName()).withStyle(ChatFormatting.GOLD));

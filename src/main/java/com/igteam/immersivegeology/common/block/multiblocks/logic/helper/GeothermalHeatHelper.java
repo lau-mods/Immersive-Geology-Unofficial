@@ -10,14 +10,12 @@ package com.igteam.immersivegeology.common.block.multiblocks.logic.helper;
 
 
 import blusunrize.immersiveengineering.api.multiblocks.blocks.env.IMultiblockLevel;
-import blusunrize.immersiveengineering.common.blocks.multiblocks.process.MultiblockProcess;
 import com.igteam.immersivegeology.common.block.multiblocks.logic.GeothermalExchangerLogic;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.GeothermalConversionRecipe;
 import com.igteam.immersivegeology.core.lib.IGLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -54,7 +52,7 @@ public class GeothermalHeatHelper
 		if (cachedRecipes == null) {
 			Level currentLevel = level.get();
 			if (currentLevel != null) {
-				cachedRecipes = new ArrayList<>(GeothermalConversionRecipe.RECIPES.getRecipes(currentLevel));
+				cachedRecipes = new ArrayList<>(GeothermalConversionRecipe.RECIPES.getRecipes(currentLevel).stream().map(net.minecraft.world.item.crafting.RecipeHolder::value).toList());
 			}
 		}
 	}

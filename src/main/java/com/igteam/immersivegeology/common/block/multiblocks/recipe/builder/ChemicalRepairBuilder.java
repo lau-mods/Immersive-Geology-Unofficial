@@ -8,8 +8,7 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
-import com.igteam.immersivegeology.common.block.multiblocks.recipe.BloomeryFuel;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.ChemicalRepairRecipe;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -17,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
-public class ChemicalRepairBuilder extends IEFinishedRecipe<ChemicalRepairBuilder> {
+public class ChemicalRepairBuilder extends IGRecipeBuilder<ChemicalRepairBuilder> {
 	private ChemicalRepairBuilder() {
 		super(ChemicalRepairRecipe.SERIALIZER.get());
 		this.maxResultCount = 0;

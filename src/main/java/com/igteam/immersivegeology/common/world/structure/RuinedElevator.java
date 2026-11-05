@@ -25,7 +25,7 @@ import java.util.Random;
 
 public class RuinedElevator extends Structure
 {
-	public static final Codec<RuinedElevator> CODEC = RecordCodecBuilder.<RuinedElevator>mapCodec(instance ->
+	public static final com.mojang.serialization.MapCodec<RuinedElevator> CODEC = RecordCodecBuilder.<RuinedElevator>mapCodec(instance ->
 			instance.group(
 					RuinedElevator.settingsCodec(instance),
 					StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
@@ -34,7 +34,7 @@ public class RuinedElevator extends Structure
 					Codec.intRange(-31, 110).fieldOf("y_max").forGetter(structure -> structure.ymax),
 					Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter)
 			).apply(instance, RuinedElevator::new)
-	).codec();
+	);
 
 	private final Holder<StructureTemplatePool> startPool;
 	private final int size;
@@ -84,7 +84,10 @@ public class RuinedElevator extends Structure
 				structurePos,
 				false, // useExpansionHack
 				Optional.empty(), // No heightmap projection needed
-				this.maxDistanceFromCenter
+				this.maxDistanceFromCenter,
+                net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup.EMPTY,
+                net.minecraft.world.level.levelgen.structure.pools.DimensionPadding.ZERO,
+                net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings.APPLY_WATERLOGGING
 		);
 	}
 

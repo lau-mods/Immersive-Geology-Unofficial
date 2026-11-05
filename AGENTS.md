@@ -1,8 +1,8 @@
 # Immersive Geology — unofficial NeoForge port
 
-- Work on `neoforge-1.21.1-uo`. Target Minecraft 1.21.1, NeoForge and Java 21; the migration is in progress until build and runtime validation pass.
+- Work on `neoforge-1.21.1-uo`. Target Minecraft 1.21.1, NeoForge and Java 21; the migration is in progress until build and runtime validation pass. Main `compileJava` passes; datagen, GameTest and runtime validation are still pending.
 - Preserve the original gameplay, material and machine design. Do not add backwards compatibility with 1.20.1, unrelated optimizations or features.
-- Keep `immersivegeology` as the mod ID. Immersive Engineering remains required; JEI and TerraFirmaCraft integrations remain optional.
+- Keep `immersivegeology` as the mod ID. Immersive Engineering remains required; JEI remains optional. TerraFirmaCraft integration is removed by user request; retain its original assets.
 - Preserve original textures, models, author credits and license files. This explicit port requirement takes precedence over the parent guide's license-file consolidation rule. Only change resource formats or paths when required by the target version.
 - Keep changes minimal and readable. Remove obsolete code and development dependencies; do not remove assets merely because integration code changes.
 - Use the versions in `gradle.properties` and actual dependency sources as the API reference.

@@ -13,17 +13,10 @@ import com.igteam.immersivegeology.core.material.helper.material.IStoneType;
 import com.igteam.immersivegeology.common.config.IGServerConfig;
 import com.igteam.immersivegeology.common.config.IGServerConfig.Ores.OreConfig;
 import com.igteam.immersivegeology.common.world.features.IGOreFeature;
-import com.igteam.immersivegeology.common.world.features.IGOreFeature.IGOreFeatureConfig;
 import com.igteam.immersivegeology.common.world.features.IGOreFeature.Vein;
-import com.igteam.immersivegeology.common.world.compat.IGTFCWorld;
 import com.igteam.immersivegeology.common.world.features.helper.IGOreGenUtils;
-import com.igteam.immersivegeology.common.world.placements.IGCountPlacement;
-import com.igteam.immersivegeology.core.lib.IGLib;
 import com.igteam.immersivegeology.core.material.GeologyMaterial;
-import com.igteam.immersivegeology.core.material.data.enums.StoneEnum;
-import com.igteam.immersivegeology.core.material.helper.material.MaterialHelper;
 import com.igteam.immersivegeology.core.material.helper.material.StoneFormation;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -33,37 +26,23 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.Heightmap.Types;
-import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
-import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.event.entity.living.MobSpawnEvent.SpawnPlacementCheck;
-import org.checkerframework.checker.units.qual.C;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class IGDefaultPlacement extends PlacementFilter
 {
-	public static final Codec<IGDefaultPlacement> PLACEMENT_CODEC;
+	public static final com.mojang.serialization.MapCodec<IGDefaultPlacement> PLACEMENT_CODEC;
 
 	private final IWorldGenConfig entry;
 	public IGDefaultPlacement(IWorldGenConfig entry) {
@@ -105,7 +84,7 @@ public class IGDefaultPlacement extends PlacementFilter
 	}
 
 	static {
-		PLACEMENT_CODEC = IWorldGenConfig.CODEC.xmap(IGDefaultPlacement::new, (p) -> {
+		PLACEMENT_CODEC = IWorldGenConfig.CODEC.fieldOf("value").xmap(IGDefaultPlacement::new, (p) -> {
 			return p.entry;
 		});
 	}
@@ -120,17 +99,16 @@ public class IGDefaultPlacement extends PlacementFilter
 		}
 
 		Holder<Biome> biome = level.getBiome(worldPos);
-		boolean isOverworld = biome.containsTag(BiomeTags.IS_OVERWORLD);
-		boolean isEnd = biome.containsTag(BiomeTags.IS_END);
-		boolean isNether = biome.containsTag(BiomeTags.IS_NETHER);
+		boolean isOverworld = biome.is(BiomeTags.IS_OVERWORLD);
+		boolean isEnd = biome.is(BiomeTags.IS_END);
+		boolean isNether = biome.is(BiomeTags.IS_NETHER);
 		if(isOverworld || isNether || isEnd)
 		{
 			boolean possiblePlace = (isEnd ? canPlaceVeinEnd(chunkPos, seed, config) : canPlaceVein(chunkPos, seed, config)) && canSpawnAt(biome);
 			if(!possiblePlace) return false;
 			GeologyMaterial material = entry.instance();
 
-			boolean canSpawnOverworld = declaredStoneHosts(material, Level.OVERWORLD.location())
-					|| (tfcOverworldOverride(level) && IGTFCWorld.canHostInOverworld(material));
+			boolean canSpawnOverworld = declaredStoneHosts(material, Level.OVERWORLD.location());
 			boolean canSpawnNether = declaredStoneHosts(material, Level.NETHER.location());
 			boolean canSpawnEnd = declaredStoneHosts(material, Level.END.location());
 			RandomSource random = IGOreGenUtils.getReuseRandom(entry, level.getSeed(), chunkPos);
@@ -162,28 +140,16 @@ public class IGDefaultPlacement extends PlacementFilter
 		ResourceKey<Level> dimensionKey = serverLevel.dimension();
 		ResourceLocation dimensionID = dimensionKey.location();
 		Set<ResourceLocation> dimension_whitelist = getWhitelistedDimensions();
-		if(dimension_whitelist.contains(dimensionID) || allowedByTFCOverworld(serverLevel))
+		if(dimension_whitelist.contains(dimensionID))
 		{
 			return exposedPlace(serverLevel.getSeed(), ctx.getLevel(), new ChunkPos(pos), null);
 		}
 		return false;
 	}
 
-	/**
-	 * Whether this material rides the TFC overworld override into a dimension its whitelist does not name. Off by
-	 * config, off outside a TFC world, and off for materials TFC's rock cannot host in the first place.
-	 */
-	public boolean allowedByTFCOverworld(ServerLevel level)
-	{
-		return IGTFCWorld.isOverworld(level)
-				&& IGTFCWorld.overridesDimensionWhitelist(level)
-				&& IGTFCWorld.canHostInOverworld(entry.instance());
-	}
+	
 
-	private static boolean tfcOverworldOverride(WorldGenLevel level)
-	{
-		return IGTFCWorld.isOverworld(level.getLevel()) && IGTFCWorld.overridesDimensionWhitelist(level.getLevel());
-	}
+
 
 	private static volatile Map<ResourceLocation, Set<StoneFormation>> declaredFormations;
 
@@ -220,6 +186,6 @@ public class IGDefaultPlacement extends PlacementFilter
 	private Set<ResourceLocation> getWhitelistedDimensions()
 	{
 		OreConfig config = IGServerConfig.ORES.ores.get(entry);
-		return config.dimension_whitelist.get().stream().map(ResourceLocation::new).collect(Collectors.toSet());
+		return config.dimension_whitelist.get().stream().map(ResourceLocation::parse).collect(Collectors.toSet());
 	}
 }

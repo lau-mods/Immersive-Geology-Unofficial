@@ -8,7 +8,7 @@
 
 package com.igteam.immersivegeology.core.material.data.metal;
 
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
 import com.igteam.immersivegeology.core.lib.IGLib;
 import com.igteam.immersivegeology.core.material.data.enums.ChemicalEnum;
@@ -26,7 +26,6 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Set;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class MaterialZinc extends MaterialMetal {
 
@@ -49,12 +48,12 @@ public class MaterialZinc extends MaterialMetal {
     public void setupRecipeStages()
     {
         //	public void create(String name, ItemStack itemOutput, FluidStack fluidOutput,
-        //	IngredientWithSize itemIn, FluidTagInput fluidInA, FluidTagInput fluidInB, FluidTagInput fluidInC, int time, int energy){
+        //	IngredientWithSize itemIn, SizedFluidIngredient fluidInA, SizedFluidIngredient fluidInB, SizedFluidIngredient fluidInC, int time, int energy){
         IGMethodBuilder.chemical(this, IGStageDesignation.LEECHING).create(getName()+"_oxide_to_slurry",
                 ItemStack.EMPTY,
                 ChemicalEnum.SulfuricAcid.getSlurryWith(MetalEnum.Zinc, IGLib.SLURRY_FROM_ACID_AMOUNT),
                 IngredientWithSize.of(getStack(ItemCategoryFlags.METAL_OXIDE, 1)),
-                new FluidTagInput(ChemicalEnum.SulfuricAcid.getFluidTag(BlockCategoryFlags.FLUID), IGLib.ACID_TO_SLURRY_AMOUNT),
+                SizedFluidIngredient.of(ChemicalEnum.SulfuricAcid.getFluidTag(BlockCategoryFlags.FLUID), IGLib.ACID_TO_SLURRY_AMOUNT),
                 null, null,200, 51200);
 
         IGMethodBuilder.crystallize(this, IGStageDesignation.CRYSTALLIZATION).create(

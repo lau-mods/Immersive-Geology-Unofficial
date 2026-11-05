@@ -9,19 +9,17 @@
 package com.igteam.immersivegeology.common.pack;
 
 import com.igteam.immersivegeology.core.lib.IGLib;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.PackSource;
 import com.igteam.immersivegeology.core.material.data.stone.IGStoneTypes;
-import net.minecraftforge.event.AddPackFindersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * Puts {@link IGDeclaredStonePack} in front of the resource and data pack stacks.
  */
-@Mod.EventBusSubscriber(modid = IGLib.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = IGLib.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class IGPackFinder
 {
 	@SubscribeEvent
@@ -34,14 +32,20 @@ public class IGPackFinder
 
 		PackType type = event.getPackType();
 		event.addRepositorySource(consumer -> {
-			Pack pack = Pack.readMetaAndCreate(
-					IGDeclaredStonePack.PACK_ID,
-					Component.literal("Immersive Geology declared stone types"),
-					true,
-					id -> new IGDeclaredStonePack(type),
-					type,
-					Pack.Position.BOTTOM,
-					PackSource.BUILT_IN);
+            Pack pack = Pack.readMetaAndCreate(IGDeclaredStonePack.LOCATION, new Pack.ResourcesSupplier()
+            {
+                @Override
+                public net.minecraft.server.packs.PackResources openPrimary(net.minecraft.server.packs.PackLocationInfo location)
+                {
+                    return new IGDeclaredStonePack(type);
+                }
+
+                @Override
+                public net.minecraft.server.packs.PackResources openFull(net.minecraft.server.packs.PackLocationInfo location, Pack.Metadata metadata)
+                {
+                    return new IGDeclaredStonePack(type);
+                }
+            }, type, new net.minecraft.server.packs.PackSelectionConfig(true, Pack.Position.BOTTOM, false));
 			if(pack!=null) consumer.accept(pack);
 		});
 	}

@@ -12,7 +12,6 @@ import blusunrize.immersiveengineering.ImmersiveEngineering;
 import blusunrize.immersiveengineering.api.EnumMetals;
 import blusunrize.immersiveengineering.api.IETags;
 import blusunrize.immersiveengineering.common.register.IEBlocks;
-import blusunrize.immersiveengineering.common.register.IEBlocks.MetalDecoration;
 import blusunrize.immersiveengineering.common.register.IEItems.Ingredients;
 import blusunrize.immersiveengineering.common.register.IEItems.Metals;
 import com.igteam.immersivegeology.client.helper.IGVeinTextureType;
@@ -267,7 +266,7 @@ public interface MaterialHelper {
         } catch(Exception ignored){}
 
         if(flag.equals(BlockCategoryFlags.ORE_BLOCK)){
-            return IGRegistrationHolder.getBlock.apply(flag.getRegistryKey(this, StoneEnum.Shale, OreRichness.RICH));
+            return IGRegistrationHolder.getBlock.apply(flag.getRegistryKey(this, StoneEnum.MCStone, OreRichness.RICH));
         }
 
         if(getBlockRegistryMap().containsKey(flag.getRegistryKey(this))) {

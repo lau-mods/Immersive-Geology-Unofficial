@@ -9,14 +9,13 @@
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.PelletizerRecipe;
-import com.igteam.immersivegeology.common.block.multiblocks.recipe.RotaryKilnRecipe;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class PelletizerRecipeBuilder extends IEFinishedRecipe<PelletizerRecipeBuilder>
+public class PelletizerRecipeBuilder extends IGRecipeBuilder<PelletizerRecipeBuilder>
 {
 	protected PelletizerRecipeBuilder()
 	{

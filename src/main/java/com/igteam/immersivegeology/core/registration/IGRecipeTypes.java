@@ -13,13 +13,11 @@ import com.igteam.immersivegeology.common.block.multiblocks.recipe.BloomeryFuel;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.*;
 import com.igteam.immersivegeology.common.recipe.IGGeoRecipe;
 import com.igteam.immersivegeology.core.lib.IGLib;
-import com.igteam.immersivegeology.core.registration.helper.EmptyRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class IGRecipeTypes
 {
@@ -45,7 +43,6 @@ public class IGRecipeTypes
 	public static final TypeWithClass<PelletizerRecipe> PELLETIZER = register("pelletizer",PelletizerRecipe.class);
 	public static final TypeWithClass<FoundryRecipe> FOUNDRY = register("foundry",FoundryRecipe.class);
 	public static final TypeWithClass<FoundryAlloyRecipe> FOUNDRY_ALLOYING = register("foundry_alloying",FoundryAlloyRecipe.class);
-	public static final TypeWithClass<EmptyRecipe> EMPTY = register("empty", EmptyRecipe.class);
 
 	public static final TypeWithClass<BloomeryFuel> BLOOMERY_FUEL = register("bloomery_fuel", BloomeryFuel.class);
 	public static final TypeWithClass<ChemicalRepairRecipe> CHEMICAL_REPAIR_RECIPE = register("chemical_repair", ChemicalRepairRecipe.class);
@@ -54,16 +51,16 @@ public class IGRecipeTypes
 	private static <T extends Recipe<?>>
 	TypeWithClass<T> register(String name, Class<T> type)
 	{
-		RegistryObject<RecipeType<T>> regObj = REGISTER.register(name, () -> new RecipeType<>()
+		DeferredHolder<RecipeType<?>, RecipeType<T>> regObj = REGISTER.register(name, () -> new RecipeType<>()
 		{
 		});
 		return new TypeWithClass<>(regObj, type);
 	}
 
-	public static void init()
+	public static void init(net.neoforged.bus.api.IEventBus bus)
 	{
 		IGLib.IG_LOGGER.info("======== Registration of Immersive Geology Recipe Types ========");
-		REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+		REGISTER.register(bus);
 		IGLib.IG_LOGGER.info("Finished");
 	}
 }

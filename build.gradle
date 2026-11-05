@@ -60,10 +60,6 @@ repositories {
         url = 'https://maven.blamejared.com/'
         content { includeGroup 'blusunrize.immersiveengineering'; includeGroup 'mezz.jei'; includeGroup 'malte0811' }
     }
-    maven {
-        url = 'https://api.modrinth.com/maven'
-        content { includeGroup 'maven.modrinth' }
-    }
     mavenCentral()
 }
 
@@ -75,7 +71,6 @@ dependencies {
     compileOnly "mezz.jei:jei-1.21.1-common-api:${version_jei}"
     compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${version_jei}"
     runtimeOnly "mezz.jei:jei-1.21.1-neoforge:${version_jei}"
-    datagenRuntimeOnly "maven.modrinth:terrafirmacraft:${version_tfc}"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.8.1'

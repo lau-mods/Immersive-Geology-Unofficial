@@ -24,18 +24,15 @@ import com.igteam.immersivegeology.core.material.helper.material.MaterialHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
-import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
 public class IGOreGenUtils
@@ -75,7 +72,7 @@ public class IGOreGenUtils
 	public static BlockState oxidizeExposed(LevelAccessor level, BlockPos cursor, BlockState oreState)
 	{
 		// Check if the ore block is randomly ticking
-		if(oreState.getBlock().isRandomlyTicking(oreState))
+		if(oreState.isRandomlyTicking())
 		{
 			// Iterate over directions and corresponding oxidation properties
 			for(int i = 0; i < DIRECTIONS.length; i++)

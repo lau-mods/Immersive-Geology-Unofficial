@@ -8,17 +8,17 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.CrystallizerRecipe;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
-public class CrystallizerRecipeBuilder extends IEFinishedRecipe<CrystallizerRecipeBuilder>
+public class CrystallizerRecipeBuilder extends IGRecipeBuilder<CrystallizerRecipeBuilder>
 {
 	protected CrystallizerRecipeBuilder()
 	{
@@ -40,7 +40,7 @@ public class CrystallizerRecipeBuilder extends IEFinishedRecipe<CrystallizerReci
 		return new CrystallizerRecipeBuilder().addResult(new IngredientWithSize(result, count)).addFluid("fluidResult", fluid_out);
 	}
 
-	public CrystallizerRecipeBuilder addInput(FluidTagInput fluidTag)
+	public CrystallizerRecipeBuilder addInput(SizedFluidIngredient fluidTag)
 	{
 		return addFluidTag(generateSafeInputKey(), fluidTag);
 	}

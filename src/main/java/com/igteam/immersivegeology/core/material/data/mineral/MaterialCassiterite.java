@@ -25,10 +25,9 @@ public class MaterialCassiterite extends MaterialMineral {
         this.acceptableStoneTypes.add(StoneFormation.IGNEOUS_EXTRUSIVE);
         this.acceptableStoneTypes.add(StoneFormation.MINECRAFT_STONE);
 
-        addFlags(ModFlags.TFC, MaterialFlags.EXISTING_IMPLEMENTATION);
+        
         addFlags(ItemCategoryFlags.PELLET);
 
-        addExistingFlag(ModFlags.TFC, BlockCategoryFlags.ORE_BLOCK);
         CONFIG = new MineralConfig(40,50,1,-64,175,2590, 0.5,false,Optional.of(BiomeTags.IS_OVERWORLD), IGGenerationType.DEFAULT);
     }
 

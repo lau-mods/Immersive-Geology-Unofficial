@@ -37,7 +37,6 @@ import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
@@ -57,7 +56,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -69,7 +68,7 @@ public class IGBlockLootProvider implements LootTableSubProvider
 	private BiConsumer<ResourceLocation, LootTable.Builder> out;
 
 	private ResourceLocation toTableLoc(ResourceLocation in) {
-		return new ResourceLocation(in.getNamespace(), "blocks/" + in.getPath());
+		return ResourceLocation.fromNamespaceAndPath(in.getNamespace(), "blocks/" + in.getPath());
 	}
 
 	@Override
@@ -90,7 +89,7 @@ public class IGBlockLootProvider implements LootTableSubProvider
 
 	private void registerOres()
 	{
-		for(RegistryObject<Block> block_object : IGRegistrationHolder.getBlockRegistryMap().values())
+		for(DeferredHolder<Block, Block> block_object : IGRegistrationHolder.getBlockRegistryMap().values())
 		{
 			if(block_object.isPresent())
 			{
@@ -138,7 +137,7 @@ public class IGBlockLootProvider implements LootTableSubProvider
 
 	private void registerCrates()
 	{
-		for(RegistryObject<Block> block : IGRegistrationHolder.getBlockRegister().getEntries())
+		for(DeferredHolder<Block, Block> block : IGRegistrationHolder.getBlockRegister().getEntries())
 		{
 			if(block.get() instanceof IGCrateEntityType type)
 			{
@@ -163,7 +162,7 @@ public class IGBlockLootProvider implements LootTableSubProvider
 	}
 
 	private void registerSlabs() {
-		for(RegistryObject<Block> block : IGRegistrationHolder.getBlockRegister().getEntries())
+		for(DeferredHolder<Block, Block> block : IGRegistrationHolder.getBlockRegister().getEntries())
 		{
 			if(block.get() instanceof IGSlabBlock slab)
 			{
@@ -186,7 +185,7 @@ public class IGBlockLootProvider implements LootTableSubProvider
 	}
 
 	private void registerAllRemainingAsDefault() {
-		for(RegistryObject<Block> b : IGRegistrationHolder.getBlockRegister().getEntries())
+		for(DeferredHolder<Block, Block> b : IGRegistrationHolder.getBlockRegister().getEntries())
 		{
 			if(b.get() instanceof IGBlockType block)
 			{
@@ -214,7 +213,7 @@ public class IGBlockLootProvider implements LootTableSubProvider
 	private void registerDevices() {
 		// Both halves are the same block, so the drop is pinned to the lower one; otherwise breaking either half
 		// would hand back two detectors.
-		RegistryObject<Block> detector = IGRegistrationHolder.getBlockRegistryMap()
+		DeferredHolder<Block, Block> detector = IGRegistrationHolder.getBlockRegistryMap()
 				.get(IGRegistrationHolder.METAL_DETECTOR_KEY);
 		// Charge survives being picked up: the item hands the same tag straight back to the block entity when it
 		// is placed again, so a detector is never wiped by moving it.

@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 @JeiPlugin
 public class JEIIntegration implements IModPlugin
 {
-	private static final ResourceLocation ID = new ResourceLocation(IGLib.MODID, "main");
+	private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(IGLib.MODID, "main");
 	@Override
 	public ResourceLocation getPluginUid()
 	{
@@ -113,7 +113,8 @@ public class JEIIntegration implements IModPlugin
 	private <T extends Recipe<?>> List<T> getFiltered(CachedRecipeList<T> cachedList, Predicate<T> include)
 	{
 		return cachedList.getRecipes(Minecraft.getInstance().level).stream()
-				.filter(include)
+				.map(net.minecraft.world.item.crafting.RecipeHolder::value)
+                .filter(include)
 				.toList();
 	}
 

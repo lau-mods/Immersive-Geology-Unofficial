@@ -8,7 +8,7 @@
 
 package com.igteam.immersivegeology.core.material.data.mineral;
 
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
 import com.igteam.immersivegeology.core.material.data.enums.ChemicalEnum;
 import com.igteam.immersivegeology.core.material.data.enums.MetalEnum;
@@ -43,15 +43,15 @@ public class MaterialSaltpeter extends MaterialEvaporateMineral
 		super.setupRecipeStages();
 		/*
 			public void create(String name, ItemStack itemOutput, FluidStack fluidOutput, IngredientWithSize itemIn,
-			FluidTagInput fluidInA, FluidTagInput fluidInB, FluidTagInput fluidInC, int time, int energy){
+			SizedFluidIngredient fluidInA, SizedFluidIngredient fluidInB, SizedFluidIngredient fluidInC, int time, int energy){
 
 		 */
 		IGMethodBuilder.chemical(this, IGStageDesignation.LEECHING).create(getName()+"solution_to_acid",
 				MetalEnum.Sodium.getStack(ItemCategoryFlags.COMPOUND_DUST),
 				ChemicalEnum.NitricAcid.getFluidStack(125),
 				IngredientWithSize.of(ItemStack.EMPTY),
-				new FluidTagInput(ChemicalEnum.Brine.getSlurryTagWith(BlockCategoryFlags.SLURRY, this), 125),
-				new FluidTagInput(ChemicalEnum.SulfuricAcid.getFluidTag(BlockCategoryFlags.FLUID), 125),
+				SizedFluidIngredient.of(ChemicalEnum.Brine.getSlurryTagWith(BlockCategoryFlags.SLURRY, this), 125),
+				SizedFluidIngredient.of(ChemicalEnum.SulfuricAcid.getFluidTag(BlockCategoryFlags.FLUID), 125),
 				null,
 				200, 51200);
 	}

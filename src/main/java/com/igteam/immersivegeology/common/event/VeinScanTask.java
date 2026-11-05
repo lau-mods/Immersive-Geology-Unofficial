@@ -73,7 +73,6 @@ public class VeinScanTask
 
 	public final boolean fullScan;
 
-	public final boolean tfcAssociateFallback;
 
 
 	public final int wanted;
@@ -110,27 +109,19 @@ public class VeinScanTask
 	public static VeinScanTask forMaterial(CommandSourceStack source, @NotNull ServerLevel level,
 										   @NotNull MaterialInterface<?> type, int radius, boolean absolute, int wanted)
 	{
-		IWorldGenConfig genConfig = (IWorldGenConfig)type;
 		TagKey<Block> tag = type.getBlockMaterialTag();
-		// A material that cannot place itself here can still be in the ground as an associate of some other vein,
-		// which is what happens to the Nether sulphides in a TFC world while allow_all_in_overworld is off - TFC's
-		// rock accepts them even though their own placement never runs. The seed roll cannot see any of that, so
-		// there is nothing to predict from and the search has to read the blocks instead.
-		boolean tfcFallback = !absolute&&!IGVeinLocator.canGenerateIn(level, genConfig)
-				&&IGVeinLocator.canLocalStoneHost(level, genConfig);
-		return new VeinScanTask(source, level, type, state -> state.is(tag), radius, absolute, wanted, tfcFallback);
+		return new VeinScanTask(source, level, type, state -> state.is(tag), radius, absolute, wanted);
 	}
 
 	public static VeinScanTask forAnyDeposit(CommandSourceStack source, @NotNull ServerLevel level, int radius,
 											 boolean absolute, int wanted)
 	{
 		return new VeinScanTask(source, level, null, state -> state.getBlock() instanceof IOreBlock,
-				radius, absolute, wanted, false);
+				radius, absolute, wanted);
 	}
 
 	private VeinScanTask(CommandSourceStack source, @NotNull ServerLevel level, @Nullable MaterialInterface<?> type,
-						 Predicate<BlockState> matcher, int radius, boolean absolute, int wanted,
-						 boolean tfcAssociateFallback)
+						 Predicate<BlockState> matcher, int radius, boolean absolute, int wanted)
 	{
 		this.source = source;
 		this.level = level;
@@ -139,8 +130,7 @@ public class VeinScanTask
 		this.absolute = absolute;
 		this.wanted = Math.max(1, wanted);
 		this.matcher = matcher;
-		this.tfcAssociateFallback = tfcAssociateFallback;
-		this.fullScan = absolute||tfcAssociateFallback;
+		this.fullScan = absolute;
 
 		ServerPlayer player = source.getPlayer();
 		this.origin = player!=null?player.chunkPosition(): new ChunkPos(BlockPos.containing(source.getPosition()));
@@ -163,11 +153,7 @@ public class VeinScanTask
 			this.stage = Stage.PREDICTING;
 		}
 
-		if(tfcAssociateFallback)
-		{
-			source.sendSuccess(() -> Component.translatable("command.immersivegeology.veinlocate.tfc_associate",
-					targetName()).withStyle(ChatFormatting.GRAY), false);
-		}
+
 		source.sendSuccess(() -> Component.translatable(fullScan
 				?"command.immersivegeology.veinlocate.searching"
 				: "command.immersivegeology.veinlocate.predicting", targetName()), false);

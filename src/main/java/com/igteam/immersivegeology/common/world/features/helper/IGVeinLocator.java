@@ -13,11 +13,9 @@ import com.igteam.immersivegeology.common.config.IGServerConfig.Ores.OreConfig;
 import com.igteam.immersivegeology.common.world.IGDefaultPlacement;
 import com.igteam.immersivegeology.common.block.helper.IOreBlock;
 import com.igteam.immersivegeology.common.world.IWorldGenConfig;
-import com.igteam.immersivegeology.common.world.compat.IGTFCWorld;
 import com.igteam.immersivegeology.common.world.features.IGOreFeature;
 import com.igteam.immersivegeology.core.lib.IGLib;
 import com.igteam.immersivegeology.core.material.helper.material.MaterialInterface;
-import com.igteam.immersivegeology.core.material.helper.material.StoneFormation;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -247,7 +245,7 @@ public final class IGVeinLocator
 			// Sampling it is the expensive, so it is done once and reused across every material.
 			Holder<Biome> biome = level.getUncachedNoiseBiome(
 					QuartPos.fromBlock(chunk.getMinBlockX()), 0, QuartPos.fromBlock(chunk.getMinBlockZ()));
-			boolean isEnd = biome.containsTag(BiomeTags.IS_END);
+			boolean isEnd = biome.is(BiomeTags.IS_END);
 
 			for(MaterialRoll material : materials)
 			{
@@ -276,19 +274,12 @@ public final class IGVeinLocator
 
 		ResourceLocation dimension = level.dimension().location();
 		boolean whitelisted = config.dimension_whitelist.get().stream()
-				.map(ResourceLocation::new)
+				.map(ResourceLocation::parse)
 				.anyMatch(dimension::equals);
-		if(whitelisted) return true;
-
-		return IGTFCWorld.isOverworld(level)&&IGTFCWorld.overridesDimensionWhitelist(level)
-				&&IGTFCWorld.canHostInOverworld(entry.instance());
+		return whitelisted;
 	}
 
-	public static boolean canLocalStoneHost(ServerLevel level, IWorldGenConfig entry)
-	{
-		return IGTFCWorld.isOverworld(level)&&IGTFCWorld.isTFCWorld(level)
-				&&IGTFCWorld.canHostInOverworld(entry.instance());
-	}
+
 
 	@Nullable
 	private static BlockPos nearest(LongArrayList packed, BlockPos target)

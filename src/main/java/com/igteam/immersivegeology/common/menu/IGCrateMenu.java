@@ -10,9 +10,6 @@ package com.igteam.immersivegeology.common.menu;
 
 import blusunrize.immersiveengineering.api.IEApi;
 import com.google.common.base.Preconditions;
-import com.igteam.immersivegeology.core.lib.IGLib;
-import invtweaks.api.container.ChestContainer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,7 +24,6 @@ import javax.annotation.Nonnull;
 
 import static com.igteam.immersivegeology.common.block.entity.crate.IGCrateEntity.CONTAINER_SIZE;
 
-@ChestContainer
 public class IGCrateMenu extends AbstractContainerMenu
 {
 	private final Container container;

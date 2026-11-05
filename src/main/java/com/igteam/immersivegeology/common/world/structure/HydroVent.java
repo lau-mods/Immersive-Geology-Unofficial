@@ -14,7 +14,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
@@ -22,11 +21,10 @@ import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
 import java.util.Optional;
-import java.util.Random;
 
 public class HydroVent extends Structure
 {
-	public static final Codec<HydroVent> CODEC = RecordCodecBuilder.<HydroVent>mapCodec(instance ->
+	public static final com.mojang.serialization.MapCodec<HydroVent> CODEC = RecordCodecBuilder.<HydroVent>mapCodec(instance ->
 			instance.group(
 					HydroVent.settingsCodec(instance),
 					StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
@@ -35,7 +33,7 @@ public class HydroVent extends Structure
 					Codec.intRange(-31, 110).fieldOf("y_max").forGetter(structure -> structure.ymax),
 					Codec.intRange(1, 128).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter)
 			).apply(instance, HydroVent::new)
-	).codec();
+	);
 
 	private final Holder<StructureTemplatePool> startPool;
 	private final int size;
@@ -81,7 +79,10 @@ public class HydroVent extends Structure
 				structurePos,
 				false, // useExpansionHack
 				Optional.empty(), // No heightmap projection needed
-				this.maxDistanceFromCenter
+				this.maxDistanceFromCenter,
+                net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup.EMPTY,
+                net.minecraft.world.level.levelgen.structure.pools.DimensionPadding.ZERO,
+                net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings.APPLY_WATERLOGGING
 		);
 	}
 

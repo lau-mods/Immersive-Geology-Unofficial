@@ -8,59 +8,47 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe;
 
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import blusunrize.immersiveengineering.api.crafting.IERecipeSerializer;
-import blusunrize.immersiveengineering.api.crafting.IERecipeTypes;
+import blusunrize.immersiveengineering.api.crafting.TagOutput;
 import blusunrize.immersiveengineering.api.crafting.IESerializableRecipe;
 import blusunrize.immersiveengineering.api.crafting.cache.CachedRecipeList;
-import blusunrize.immersiveengineering.api.utils.FastEither;
 import blusunrize.immersiveengineering.api.utils.TagUtils;
 import com.igteam.immersivegeology.core.registration.IGRecipeTypes;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Function;
 
 public class TurbineFuel extends IESerializableRecipe
 {
-	public static RegistryObject<IERecipeSerializer<TurbineFuel>> SERIALIZER;
+	public static DeferredHolder<RecipeSerializer<?>, IERecipeSerializer<TurbineFuel>> SERIALIZER;
 	public static final CachedRecipeList<TurbineFuel> RECIPES;
-	private final FastEither<TagKey<Fluid>, List<Fluid>> fluids;
+	public final TagKey<Fluid> fluids;
 	private final int burnTime;
 	private final int consume_amount;
 	private final float outputRatio;
 
-	public TurbineFuel(ResourceLocation id, TagKey<Fluid> fluids, float outputRatio, int consume_amount, int burnTime) {
-		super(LAZY_EMPTY, IGRecipeTypes.TURBINE_FUEL, id);
-		this.fluids = FastEither.left(fluids);
+	public TurbineFuel(TagKey<Fluid> fluids, float outputRatio, int consume_amount, int burnTime) {
+		super(TagOutput.EMPTY, IGRecipeTypes.TURBINE_FUEL);
+		this.fluids = fluids;
 		this.burnTime = burnTime;
 		this.outputRatio = outputRatio;
 		this.consume_amount = consume_amount;
-	}
-
-	public TurbineFuel(ResourceLocation id, List<Fluid> fluids, float outputRatio, int consume_amount, int burnTime) {
-		super(LAZY_EMPTY, IGRecipeTypes.TURBINE_FUEL, id);
-		this.fluids = FastEither.right(fluids);
-		this.burnTime = burnTime;
-		this.consume_amount = consume_amount;
-		this.outputRatio = outputRatio;
 	}
 
 	public List<Fluid> getFluids() {
-		return this.fluids.map((t) -> {
-			return TagUtils.elementStream(BuiltInRegistries.FLUID, t).toList();
-		}, Function.identity());
-	}
+        return TagUtils.elementStream(BuiltInRegistries.FLUID, fluids).toList();
+    }
 
 	public int getBurnTime() {
 		return this.burnTime;
@@ -81,19 +69,19 @@ public class TurbineFuel extends IESerializableRecipe
 	}
 
 	@Nonnull
-	public ItemStack getResultItem(@NotNull RegistryAccess access) {
+	public ItemStack getResultItem(@NotNull HolderLookup.Provider access) {
 		return ItemStack.EMPTY;
 	}
 
 	public boolean matches(Fluid in) {
-		return this.fluids.isLeft() ? in.is(this.fluids.leftNonnull()) : (this.fluids.rightNonnull()).contains(in);
+		return in.is(fluids);
 	}
 
 	public static TurbineFuel getRecipeFor(Level level, Fluid in, @Nullable TurbineFuel hint) {
 		if (hint != null && hint.matches(in)) {
 			return hint;
 		} else {
-			Iterator<TurbineFuel> var3 = RECIPES.getRecipes(level).iterator();
+			Iterator<TurbineFuel> var3 = RECIPES.getRecipes(level).stream().map(net.minecraft.world.item.crafting.RecipeHolder::value).toList().iterator();
 
 			TurbineFuel fuel;
 			do {
@@ -111,7 +99,7 @@ public class TurbineFuel extends IESerializableRecipe
 	public static SortedMap<Component, Integer> getManualFuelList(Level level) {
 		SortedMap<Component, Integer> map = new TreeMap<>(Comparator.comparing(Component::getString, Comparator.naturalOrder()));
 
-		for(TurbineFuel recipe : RECIPES.getRecipes(level))
+		for(TurbineFuel recipe : RECIPES.getRecipes(level).stream().map(net.minecraft.world.item.crafting.RecipeHolder::value).toList())
 		{
 			for(Fluid f : recipe.getFluids())
 			{

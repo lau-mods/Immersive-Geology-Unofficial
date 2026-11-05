@@ -8,23 +8,20 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
-import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.CentrifugeRecipe;
-import com.igteam.immersivegeology.common.block.multiblocks.recipe.ChemicalRecipe;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
-public class CentrifugeRecipeBuilder extends IEFinishedRecipe<CentrifugeRecipeBuilder>
+public class CentrifugeRecipeBuilder extends IGRecipeBuilder<CentrifugeRecipeBuilder>
 {
 	protected CentrifugeRecipeBuilder()
 	{
 		super(CentrifugeRecipe.SERIALIZER.get());
 	}
 
-	public static CentrifugeRecipeBuilder builder(ItemStack itemOutput, FluidTagInput fluidIn, int energy, int time, FluidStack primaryFluidOutput, FluidStack secondaryFluidOutput) {
+	public static CentrifugeRecipeBuilder builder(ItemStack itemOutput, SizedFluidIngredient fluidIn, int energy, int time, FluidStack primaryFluidOutput, FluidStack secondaryFluidOutput) {
 		CentrifugeRecipeBuilder builder = new CentrifugeRecipeBuilder()
 				.addIngredient("item_output", itemOutput)
 				.addFluidTag("fluid_input", fluidIn)

@@ -10,29 +10,17 @@ package com.igteam.immersivegeology.core.material.data.enums;
 
 import com.igteam.immersivegeology.core.lib.IGLib;
 import com.igteam.immersivegeology.core.material.data.stone.compat.adastra.*;
-import com.igteam.immersivegeology.core.material.data.stone.compat.tfc.*;
-import com.igteam.immersivegeology.core.material.data.stone.compat.tfc.MaterialAndesite;
-import com.igteam.immersivegeology.core.material.data.stone.compat.tfc.MaterialDiorite;
-import com.igteam.immersivegeology.core.material.data.stone.compat.tfc.MaterialGranite;
 import com.igteam.immersivegeology.core.material.data.stone.vanilla.*;
 import com.igteam.immersivegeology.core.material.data.types.MaterialStone;
-import com.igteam.immersivegeology.core.material.helper.flags.BlockCategoryFlags;
-import com.igteam.immersivegeology.core.material.helper.flags.IFlagType;
 import com.igteam.immersivegeology.core.material.helper.flags.ModFlags;
 import com.igteam.immersivegeology.core.material.helper.material.IStoneType;
-import com.igteam.immersivegeology.core.material.helper.material.MaterialInterface;
 import com.mojang.serialization.Codec;
-import net.minecraft.locale.Language;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
-import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -40,35 +28,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public enum StoneEnum implements IStoneType {
-    //===== Terra Firma Craft =====\\
-    Andesite(new MaterialAndesite()),
-    Basalt(new MaterialBasalt()),
-    Dacite(new MaterialDacite()),
-    Rhyolite(new MaterialRhyolite()),
-
-    Diorite(new MaterialDiorite()),
-    Gabbro(new MaterialGabbro()),
-    Granite(new MaterialGranite()),
-
-    Gneiss(new MaterialGneiss()),
-    Marble(new MaterialMarble()),
-    Phyllite(new MaterialPhyllite()),
-    Quartzite(new MaterialQuartzite()),
-    Schist(new MaterialSchist()),
-    Slate(new MaterialSlate()),
-
-    Chalk(new MaterialChalk()),
-    Chert(new MaterialChert()),
-    Claystone(new MaterialClaystone()),
-    Conglomerate(new MaterialConglomerate()),
-    Dolomite(new MaterialDolomite()),
-    Limestone(new MaterialLimestone()),
-    Shale(new MaterialShale()),
-
-
     //===== Minecraft Stones =====\\
     MCStone(new MaterialVanilla()),
     MCDeepslate(new MaterialMCDeepslate()),
@@ -175,10 +136,7 @@ public enum StoneEnum implements IStoneType {
         return stoneState.getBlock().getName().getString().equalsIgnoreCase(material.getName());
     }
 
-    public String getTFCStoneLoc()
-    {
-        return instance().getTFCStoneLoc();
-    }
+
 
     public boolean isStoneTypeValid()
     {
@@ -220,10 +178,7 @@ public enum StoneEnum implements IStoneType {
         return instance().getDimensions();
     }
 
-    /**
-     * Only Minecraft's own stone. TerraFirmaCraft's rock is present in a TFC world and absent from a vanilla one
-     * even when the mod is loaded, so it goes through the world-type check in IGTFCWorld instead.
-     */
+    /** Whether this is a built-in Minecraft host rock. */
     @Override
     public boolean declaresPresence()
     {

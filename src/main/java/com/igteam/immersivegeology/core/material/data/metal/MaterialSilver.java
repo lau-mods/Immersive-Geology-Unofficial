@@ -9,7 +9,7 @@
 package com.igteam.immersivegeology.core.material.data.metal;
 
 
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
 import com.igteam.immersivegeology.common.block.helper.MineralWeathering;
 import com.igteam.immersivegeology.common.world.features.helper.noise.IGGenerationType;
@@ -36,7 +36,6 @@ public class MaterialSilver extends MaterialNativeMetal {
         super();
         addFlags(MaterialFlags.EXISTING_IMPLEMENTATION);
 
-        addExistingFlag(ModFlags.TFC, BlockCategoryFlags.ORE_BLOCK);
 
         addExistingFlag(ModFlags.IMMERSIVEENGINEERING, ItemCategoryFlags.INGOT, ItemCategoryFlags.PLATE, ItemCategoryFlags.ROD, ItemCategoryFlags.WIRE, ItemCategoryFlags.NUGGET, ItemCategoryFlags.POWDER);
         addExistingFlag(ModFlags.IMMERSIVEENGINEERING, BlockCategoryFlags.STORAGE_BLOCK, BlockCategoryFlags.SHEETMETAL_BLOCK, BlockCategoryFlags.SLAB, BlockCategoryFlags.STAIRS);
@@ -84,7 +83,7 @@ public class MaterialSilver extends MaterialNativeMetal {
                 ItemStack.EMPTY,
                 ChemicalEnum.HydrochloricAcid.getSlurryWith(MetalEnum.Silver, IGLib.SLURRY_FROM_ACID_AMOUNT),
                 IngredientWithSize.of(getStack(ItemCategoryFlags.CRUSHED_ORE, 1)),
-                new FluidTagInput(ChemicalEnum.HydrochloricAcid.getFluidTag(BlockCategoryFlags.FLUID), IGLib.ACID_TO_SLURRY_AMOUNT),
+                SizedFluidIngredient.of(ChemicalEnum.HydrochloricAcid.getFluidTag(BlockCategoryFlags.FLUID), IGLib.ACID_TO_SLURRY_AMOUNT),
                 null, null, 200, 51200);
 
         IGMethodBuilder.basicSmelting(this, IGStageDesignation.REFINEMENT).create(ItemCategoryFlags.GRIT,

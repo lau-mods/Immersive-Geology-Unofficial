@@ -19,6 +19,8 @@ import java.util.function.BiFunction;
 
 public class IGMultiblockProvider {
 
+    public static final java.util.List<java.util.function.Consumer<net.neoforged.bus.api.IEventBus>> BUS_REGISTRATIONS = new ArrayList<>();
+
     public static final ArrayList<MultiblockRegistration<?>> ALL_IG_MULTIBLOCKS = new ArrayList<>();
 
     public static final MultiblockRegistration<CrystallizerLogic.State> CRYSTALLIZER = metal_skinnable(new CrystallizerLogic(), "crystallizer", false, CrystallizerPart::new)

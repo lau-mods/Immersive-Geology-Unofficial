@@ -25,10 +25,9 @@ public class MaterialMagnetite extends MaterialMineral {
         super();
         this.acceptableStoneTypes.add(StoneFormation.SEDIMENTARY);
         this.acceptableStoneTypes.add(StoneFormation.MINECRAFT_STONE);
-        addFlags(ModFlags.TFC, MaterialFlags.EXISTING_IMPLEMENTATION);
+        
         addFlags(ItemCategoryFlags.PELLET);
 
-        addExistingFlag(ModFlags.TFC, BlockCategoryFlags.ORE_BLOCK);
         CONFIG = new MineralConfig(43,35,1,-64,320,1150, 0.60,false,Optional.of(BiomeTags.IS_OVERWORLD), IGGenerationType.BANDED);
     }
 

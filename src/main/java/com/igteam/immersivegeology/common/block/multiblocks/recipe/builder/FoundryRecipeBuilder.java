@@ -8,18 +8,18 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.FoundryRecipe;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
-public class FoundryRecipeBuilder extends IEFinishedRecipe<FoundryRecipeBuilder>
+public class FoundryRecipeBuilder extends IGRecipeBuilder<FoundryRecipeBuilder>
 {
 	protected FoundryRecipeBuilder()
 	{
@@ -41,7 +41,7 @@ public class FoundryRecipeBuilder extends IEFinishedRecipe<FoundryRecipeBuilder>
 		return new FoundryRecipeBuilder().addResult(new IngredientWithSize(result, count));
 	}
 
-	public FoundryRecipeBuilder addInput(FluidTagInput fluidTag)
+	public FoundryRecipeBuilder addInput(SizedFluidIngredient fluidTag)
 	{
 		return addFluidTag(generateSafeInputKey(), fluidTag);
 	}
@@ -53,6 +53,6 @@ public class FoundryRecipeBuilder extends IEFinishedRecipe<FoundryRecipeBuilder>
 
 	public FoundryRecipeBuilder setMold(ItemLike mold)
 	{
-		return addWriter(json -> json.addProperty("mold", ForgeRegistries.ITEMS.getKey(mold.asItem()).toString()));
+		return addWriter(json -> json.addProperty("mold", BuiltInRegistries.ITEM.getKey(mold.asItem()).toString()));
 	}
 }

@@ -10,11 +10,10 @@ package com.igteam.immersivegeology.client.menu.multiblock;
 
 import blusunrize.immersiveengineering.client.gui.IEContainerScreen;
 import blusunrize.immersiveengineering.client.gui.info.EnergyInfoArea;
-import blusunrize.immersiveengineering.client.gui.info.FluidInfoArea;
+import com.igteam.immersivegeology.client.helper.IGFluidInfoArea;
 import blusunrize.immersiveengineering.client.gui.info.InfoArea;
 import com.google.common.collect.ImmutableList;
 import com.igteam.immersivegeology.common.block.multiblocks.gui.ChemicalReactorMenu;
-import com.igteam.immersivegeology.common.block.multiblocks.gui.CrystallizerMenu;
 import com.igteam.immersivegeology.core.lib.IGLib;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
@@ -75,10 +74,10 @@ public class ChemicalReactorScreen extends IEContainerScreen<ChemicalReactorMenu
 	protected List<InfoArea> makeInfoAreas()
 	{
 		return ImmutableList.of(
-				new FluidInfoArea(this.menu.tanks.leftInput(), new Rect2i(this.leftPos + 19, this.topPos + 56, 6, 32), 0, 0, 0, 0, TEXTURE),
-				new FluidInfoArea(this.menu.tanks.backInput(), new Rect2i(this.leftPos + 52, this.topPos + 56, 6, 32), 0, 0, 0, 0, TEXTURE),
-				new FluidInfoArea(this.menu.tanks.rightInput(), new Rect2i(this.leftPos + 85, this.topPos + 56, 6, 32), 0, 0, 0, 0, TEXTURE),
-				new FluidInfoArea(this.menu.tanks.output(), new Rect2i(this.leftPos + 182, this.topPos + 56, 6, 32), 0, 0, 0, 0, TEXTURE),
+				new IGFluidInfoArea(this.menu.tanks.leftInput(), new Rect2i(this.leftPos + 19, this.topPos + 56, 6, 32), 0, 0, 0, 0, TEXTURE),
+				new IGFluidInfoArea(this.menu.tanks.backInput(), new Rect2i(this.leftPos + 52, this.topPos + 56, 6, 32), 0, 0, 0, 0, TEXTURE),
+				new IGFluidInfoArea(this.menu.tanks.rightInput(), new Rect2i(this.leftPos + 85, this.topPos + 56, 6, 32), 0, 0, 0, 0, TEXTURE),
+				new IGFluidInfoArea(this.menu.tanks.output(), new Rect2i(this.leftPos + 182, this.topPos + 56, 6, 32), 0, 0, 0, 0, TEXTURE),
 				new EnergyInfoArea(this.leftPos + 108,this.topPos + 51, this.menu.energy));
 	}
 }

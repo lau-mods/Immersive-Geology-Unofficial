@@ -8,91 +8,71 @@
 
 package com.igteam.immersivegeology.common.block.entity.device;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.MapDecorations;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
+import java.util.HashMap;
 import java.util.List;
 
 public final class IGDepositMapMarks
 {
-	private IGDepositMapMarks()
-	{
-	}
+	private IGDepositMapMarks() {}
 
 	public static final String PREFIX = "ig_deposit_";
+	private static final String NAMES = "IGNames";
 
-	private static final String DECORATIONS = "Decorations";
-	private static final String NAME = "IGName";
-
-	public record Mark(String id, MapDecoration.Type type, double x, double z, Component name)
-	{
-	}
+	public record Mark(String id, Holder<MapDecorationType> type, double x, double z, Component name) {}
 
 	public static String prefixFor(long detector)
 	{
 		return PREFIX+detector+"_";
 	}
 
-	public static void write(ItemStack stack, String prefix, List<Mark> marks)
+	public static void write(ItemStack stack, String prefix, List<Mark> marks, HolderLookup.Provider provider)
 	{
-		ListTag list = stack.getOrCreateTag().getList(DECORATIONS, Tag.TAG_COMPOUND);
-		list.removeIf(entry -> entry instanceof CompoundTag tag&&tag.getString("id").startsWith(prefix));
-
-		for(Mark mark : marks)
-		{
-			CompoundTag entry = new CompoundTag();
-			entry.putByte("type", mark.type().getIcon());
-			entry.putString("id", mark.id());
-			entry.putDouble("x", mark.x());
-			entry.putDouble("z", mark.z());
-			entry.putDouble("rot", 180.0);
-			entry.putString(NAME, Component.Serializer.toJson(mark.name()));
-			list.add(entry);
-		}
-
-		if(list.isEmpty()) stack.removeTagKey(DECORATIONS);
-		else stack.addTagElement(DECORATIONS, list);
+		var decorations = new HashMap<>(stack.getOrDefault(DataComponents.MAP_DECORATIONS, MapDecorations.EMPTY).decorations());
+		decorations.keySet().removeIf(id -> id.startsWith(prefix));
+		CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> {
+			CompoundTag names = tag.getCompound(NAMES);
+			names.getAllKeys().removeIf(id -> id.startsWith(prefix));
+			for(Mark mark : marks)
+			{
+				decorations.put(mark.id(), new MapDecorations.Entry(mark.type(), mark.x(), mark.z(), 180));
+				names.putString(mark.id(), Component.Serializer.toJson(mark.name(), provider));
+			}
+			tag.put(NAMES, names);
+		});
+		stack.set(DataComponents.MAP_DECORATIONS, new MapDecorations(decorations));
 	}
 
 	public static boolean hasMarks(ItemStack stack)
 	{
-		CompoundTag tag = stack.getTag();
-		if(tag==null||!tag.contains(DECORATIONS, Tag.TAG_LIST)) return false;
-
-		ListTag list = tag.getList(DECORATIONS, Tag.TAG_COMPOUND);
-		for(int i = 0; i < list.size(); i++)
-		{
-			if(list.getCompound(i).getString("id").startsWith(PREFIX)) return true;
-		}
-		return false;
+		return stack.getOrDefault(DataComponents.MAP_DECORATIONS, MapDecorations.EMPTY)
+				.decorations().keySet().stream().anyMatch(id -> id.startsWith(PREFIX));
 	}
 
 	public static boolean restore(ItemStack stack, MapItemSavedData data, Level level)
 	{
-		CompoundTag tag = stack.getTag();
-		if(tag==null||!tag.contains(DECORATIONS, Tag.TAG_LIST)) return false;
-
+		CompoundTag names = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getCompound(NAMES);
 		boolean found = false;
-		ListTag list = tag.getList(DECORATIONS, Tag.TAG_COMPOUND);
-		for(int i = 0; i < list.size(); i++)
+		for(var mark : stack.getOrDefault(DataComponents.MAP_DECORATIONS, MapDecorations.EMPTY).decorations().entrySet())
 		{
-			CompoundTag entry = list.getCompound(i);
-			String id = entry.getString("id");
+			String id = mark.getKey();
 			if(!id.startsWith(PREFIX)) continue;
 			found = true;
-
-			if(!entry.contains(NAME, Tag.TAG_STRING)) continue;
-			Component name = Component.Serializer.fromJson(entry.getString(NAME));
-			if(name==null) continue;
-
-			data.addDecoration(MapDecoration.Type.byIcon(entry.getByte("type")), level, id,
-					entry.getDouble("x"), entry.getDouble("z"), entry.getDouble("rot"), name);
+			if(!names.contains(id)) continue;
+			Component name = Component.Serializer.fromJson(names.getString(id), level.registryAccess());
+			var entry = mark.getValue();
+			if(name!=null) data.addDecoration(entry.type(), level, id, entry.x(), entry.z(), entry.rotation(), name);
 		}
 		return found;
 	}

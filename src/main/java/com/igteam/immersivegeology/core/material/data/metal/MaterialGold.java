@@ -8,7 +8,7 @@
 
 package com.igteam.immersivegeology.core.material.data.metal;
 
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
 import com.igteam.immersivegeology.common.world.features.helper.noise.IGGenerationType;
 import com.igteam.immersivegeology.core.lib.IGLib;
@@ -34,7 +34,7 @@ public class MaterialGold extends MaterialNativeMetal {
         addExistingFlag(ModFlags.MINECRAFT, ItemCategoryFlags.INGOT, ItemCategoryFlags.NUGGET);
         addExistingFlag(ModFlags.MINECRAFT, BlockCategoryFlags.STORAGE_BLOCK);
         addExistingFlag(ModFlags.IMMERSIVEENGINEERING, ItemCategoryFlags.ROD, ItemCategoryFlags.PLATE, ItemCategoryFlags.POWDER);
-        addExistingFlag(ModFlags.TFC, BlockCategoryFlags.ORE_BLOCK);
+
 
         removeMaterialFlags(ItemCategoryFlags.METAL_OXIDE, ItemCategoryFlags.COMPOUND_DUST);
         this.acceptableStoneTypes.add(StoneFormation.NETHER_STONE);
@@ -65,8 +65,8 @@ public class MaterialGold extends MaterialNativeMetal {
                 ItemStack.EMPTY,
                 ChemicalEnum.AquaRegia.getSlurryWith(MetalEnum.Gold, 2*IGLib.SLURRY_FROM_ACID_AMOUNT),
                 IngredientWithSize.of(getStack(ItemCategoryFlags.CRUSHED_ORE, 1)),
-                new FluidTagInput(ChemicalEnum.HydrochloricAcid.getFluidTag(BlockCategoryFlags.FLUID), IGLib.ACID_TO_SLURRY_AMOUNT),
-                new FluidTagInput(ChemicalEnum.NitricAcid.getFluidTag(BlockCategoryFlags.FLUID), IGLib.ACID_TO_SLURRY_AMOUNT),
+                SizedFluidIngredient.of(ChemicalEnum.HydrochloricAcid.getFluidTag(BlockCategoryFlags.FLUID), IGLib.ACID_TO_SLURRY_AMOUNT),
+                SizedFluidIngredient.of(ChemicalEnum.NitricAcid.getFluidTag(BlockCategoryFlags.FLUID), IGLib.ACID_TO_SLURRY_AMOUNT),
                  null, 200, 51200);
 
         IGMethodBuilder.chemical(this, IGStageDesignation.REFINEMENT).create(
@@ -74,7 +74,7 @@ public class MaterialGold extends MaterialNativeMetal {
                 ItemStack.EMPTY,
                 ChemicalEnum.AquaRegia.getSlurryWith(MetalEnum.Gold, 2*IGLib.SLURRY_FROM_ACID_AMOUNT),
                 IngredientWithSize.of(getStack(ItemCategoryFlags.CRUSHED_ORE, 1)),
-                new FluidTagInput(ChemicalEnum.AquaRegia.getFluidTag(BlockCategoryFlags.FLUID), 2*IGLib.ACID_TO_SLURRY_AMOUNT),
+                SizedFluidIngredient.of(ChemicalEnum.AquaRegia.getFluidTag(BlockCategoryFlags.FLUID), 2*IGLib.ACID_TO_SLURRY_AMOUNT),
          null,null, 200, 51200);
 
         IGMethodBuilder.crystallize(this, IGStageDesignation.CRYSTALLIZATION).create(

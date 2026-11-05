@@ -42,7 +42,6 @@ public interface IStoneType extends MaterialInterface<MaterialStone>
 
 	List<TargetBlockState> getTargets(MineralEnum mineral);
 
-	String getTFCStoneLoc();
 
 	/**
 	 * Leading part of the registry name for ore blocks hosted in this rock, including the trailing underscore, or
@@ -60,9 +59,6 @@ public interface IStoneType extends MaterialInterface<MaterialStone>
 	 * Whether this rock being loaded is enough to conclude it is really in the ground of the dimensions it names.
 	 * <p>
 	 * True for Minecraft's own stone, and for a rock type someone declared in the configuration.
-	 * When declared we take it that it generates there. We have an exception for TerraFirmaCraft's rock,
-	 * which is only present when the world itself was built by TFC, so a vanilla world in a TFC pack has none of it;
-	 * that case goes through its own hardcoded world-type check instead.
 	 */
 	boolean declaresPresence();
 

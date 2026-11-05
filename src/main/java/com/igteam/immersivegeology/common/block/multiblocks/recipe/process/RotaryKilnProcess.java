@@ -8,9 +8,7 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.process;
 
-import blusunrize.immersiveengineering.api.crafting.ArcFurnaceRecipe;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.env.IMultiblockLevel;
-import blusunrize.immersiveengineering.common.blocks.multiblocks.logic.arcfurnace.ArcFurnaceLogic;
 import blusunrize.immersiveengineering.common.blocks.multiblocks.process.MultiblockProcessInMachine;
 import blusunrize.immersiveengineering.common.blocks.multiblocks.process.ProcessContext;
 import blusunrize.immersiveengineering.common.blocks.multiblocks.process.ProcessContext.ProcessContextInMachine;
@@ -33,13 +31,13 @@ public class RotaryKilnProcess extends MultiblockProcessInMachine<RotaryKilnReci
 		this.slot = data.getInt("slot_index");
 	}
 
-    public RotaryKilnProcess(RotaryKilnRecipe recipe, int slot) {
+    public RotaryKilnProcess(net.minecraft.world.item.crafting.RecipeHolder<RotaryKilnRecipe> recipe, int slot) {
 		super(recipe);
 		this.slot = slot;
 	}
 
-	public void writeExtraDataToNBT(CompoundTag nbt) {
-		super.writeExtraDataToNBT(nbt);
+	public void writeExtraDataToNBT(CompoundTag nbt, net.minecraft.core.HolderLookup.Provider provider) {
+		super.writeExtraDataToNBT(nbt, provider);
 		nbt.putInt("slot_index", slot);
 	}
 
@@ -49,9 +47,9 @@ public class RotaryKilnProcess extends MultiblockProcessInMachine<RotaryKilnReci
 			return NonNullList.create();
 		} else {
 			ItemStack input = context.getInventory().getStackInSlot(slot);
-			recipe = RotaryKilnRecipe.findRecipe(level, input);
-			if(recipe == null) return NonNullList.create();
-			return recipe.getItemOutputs();
+			var match = RotaryKilnRecipe.findRecipe(level, input);
+			if(match == null) return NonNullList.create();
+			return match.value().getItemOutputs();
 		}
 	}
 

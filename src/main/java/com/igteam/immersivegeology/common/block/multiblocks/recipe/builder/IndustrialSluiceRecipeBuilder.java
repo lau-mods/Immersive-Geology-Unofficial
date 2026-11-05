@@ -8,20 +8,18 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
 import blusunrize.immersiveengineering.api.crafting.StackWithChance;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.IndustrialSluiceRecipe;
-import com.igteam.immersivegeology.core.lib.IGLib;
 import net.minecraft.core.NonNullList;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
-public class IndustrialSluiceRecipeBuilder extends IEFinishedRecipe<IndustrialSluiceRecipeBuilder>
+public class IndustrialSluiceRecipeBuilder extends IGRecipeBuilder<IndustrialSluiceRecipeBuilder>
 {
 	protected IndustrialSluiceRecipeBuilder()
 	{
@@ -75,11 +73,7 @@ public class IndustrialSluiceRecipeBuilder extends IEFinishedRecipe<IndustrialSl
 		// Iterate through each byproduct and add it to the JsonArray
 		for(StackWithChance byproduct : byproducts)
 		{
-			JsonObject itemObject;
-			ItemStack stack = byproduct.stack().get();
-			float chance = byproduct.chance();
-			itemObject = IEFinishedRecipe.serializeStackWithChance(IngredientWithSize.of(stack), chance);
-			jsonArray.add(itemObject);
+			jsonArray.add(StackWithChance.CODECS.codec().encodeStart(com.mojang.serialization.JsonOps.INSTANCE, byproduct).getOrThrow());
 		}
 
 		// Add the JsonArray to the main object

@@ -8,18 +8,14 @@
 
 package com.igteam.immersivegeology.common.block.multiblocks.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
-import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import com.igteam.immersivegeology.client.helper.IGRecipeBuilder;
 import com.igteam.immersivegeology.common.block.multiblocks.recipe.CoreDrillRecipe;
-import com.igteam.immersivegeology.common.block.multiblocks.recipe.CrystallizerRecipe;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
-public class CoreDrillRecipeBuilder extends IEFinishedRecipe<CoreDrillRecipeBuilder>
+public class CoreDrillRecipeBuilder extends IGRecipeBuilder<CoreDrillRecipeBuilder>
 {
 	protected CoreDrillRecipeBuilder()
 	{
@@ -31,7 +27,7 @@ public class CoreDrillRecipeBuilder extends IEFinishedRecipe<CoreDrillRecipeBuil
 		return new CoreDrillRecipeBuilder().addFluid("fluidResult", new FluidStack(fluid_out, 1));
 	}
 
-	public CoreDrillRecipeBuilder addInput(FluidTagInput fluidTag)
+	public CoreDrillRecipeBuilder addInput(SizedFluidIngredient fluidTag)
 	{
 		return addFluidTag(generateSafeInputKey(), fluidTag);
 	}
