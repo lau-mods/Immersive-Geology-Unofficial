@@ -21,6 +21,7 @@ import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -117,11 +118,12 @@ public class IGClientRenderHandler implements ItemColor, BlockColor {
         {
             if(stack.getItem() instanceof IGGenericBlockItem b)
             {
-                if(b.getFlag().equals(BlockCategoryFlags.ORE_BLOCK)) return 0xffffff;
+                if(b.getFlag().equals(BlockCategoryFlags.ORE_BLOCK)) return 0xffffffff;
             }
-            return type.getColor(tintIndex);
+            // ItemRenderer reads alpha in 1.21.1; material colors are RGB tints.
+            return FastColor.ARGB32.opaque(type.getColor(tintIndex));
         }
-        return 0xffffff;
+        return 0xffffffff;
     }
 
     @OnlyIn(Dist.CLIENT)
